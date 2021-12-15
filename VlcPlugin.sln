@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VlcPlugin", "VlcPlugin\VlcPlugin.csproj", "{1ED29E48-0DF0-425A-9648-4DD393EBB248}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1ED29E48-0DF0-425A-9648-4DD393EBB248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED29E48-0DF0-425A-9648-4DD393EBB248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED29E48-0DF0-425A-9648-4DD393EBB248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED29E48-0DF0-425A-9648-4DD393EBB248}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {036389E0-0403-4268-A32B-1578B4E4AD42}
+	EndGlobalSection
+EndGlobal

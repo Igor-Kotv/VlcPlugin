@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>VLC plugin authorization</title>
+    <script>
+        let url;
+        function onEntering() {
+            var passwordValue = document.getElementById("passwordInput").value;
+            url = "loupedeck:callback/plugin/Vlc/" + passwordValue;
+        }
+        function openUrl() {
+            window.location.href = url;
+        }
+    </script>
+    <style>
+        form {
+            background-color: silver;
+            padding: 1em;
+            font-size: 1.5em;
+            left: 40%;
+            top: 40%;
+            position: absolute;
+            border-radius: 4px;
+        }
+        input{
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <label for="passwordInput">Password:</label>
+        <input type="password" id="passwordInput" onchange="onEntering()">
+        <a href="javascript:void(0)" id="linkButton" onclick="openUrl()">Sign in</a>
+    </form>
+</body>
+</html>
