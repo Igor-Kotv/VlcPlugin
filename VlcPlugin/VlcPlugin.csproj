@@ -68,9 +68,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adjustments\JogAdjustment.cs" />
+    <Compile Include="Adjustments\NavigationAdjustment.cs" />
     <Compile Include="CommandFolders\PlaylistTrackPlayCommandFolder.cs" />
-    <Compile Include="Commands\OpenFileCommand.cs" />
+    <Compile Include="Commands\ClearPlaylistCommand.cs" />
+    <Compile Include="Commands\PlayInputProfileCommand.cs" />
+    <Compile Include="Commands\RemoveTrackCommand.cs" />
+    <Compile Include="Commands\ToggleLoopCommand.cs" />
     <Compile Include="Commands\TogglePlayCommand.cs" />
+    <Compile Include="Commands\ToggleRandomCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VlcApplication.cs" />
     <Compile Include="VlcPlugin.cs" />
@@ -97,9 +102,6 @@
     <EmbeddedResource Include="Resources\ActionImages\Width50\VolumeUp.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ActionImages\Width90\OpenFile90.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width50\JogBackwards50.png" />
     <EmbeddedResource Include="Resources\ActionImages\Width50\JogForward50.png" />
     <EmbeddedResource Include="Resources\ActionImages\Width90\JogBackwards90.png" />
@@ -121,6 +123,25 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width90\Pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\Loop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\LoopOn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\RepeatOne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\PlayPause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\RandomOff.png" />
+    <EmbeddedResource Include="Resources\ActionImages\Width90\RandomOn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width50\PlayAndNavigateTracks.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

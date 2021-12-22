@@ -16,6 +16,7 @@
         private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";
         private static readonly String _playlistUrl = @"http://127.0.0.1:8080/requests/playlist.json";
         private static readonly String _authUrl = $"file:/C:/Users/{Environment.UserName}/AppData/Local/Loupedeck/PluginData/Vlc/AuthorizationPage.html";
+        private static readonly Information _trackInfo = new Information();
 
         public static HttpResponseMessage ResposeMessage { get; private set; }
         public static String ResposeData { get; set; }
@@ -49,6 +50,66 @@
             ResposeData = task.Result;
         }
 
+        public static void DeleteTrack(String id)
+        {
+            var task = Action($"pl_delete&id={id}");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void InputPlay(String inputMrl)
+        {
+            var mrl = Uri.EscapeDataString(inputMrl);
+
+            if (!mrl.StartsWith("http") && !mrl.StartsWith("rtsp") && !mrl.StartsWith("ftp"))
+            {
+                mrl = $"file:///{mrl}";
+            }
+            var task = Action($"in_play&input={mrl}");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void Empty()
+        {
+            var task = Action("pl_empty");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void ToggleRandom()
+        {
+            var task = Action("pl_random");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void Next()
+        {
+            var task = Action("pl_next");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void Previous()
+        {
+            var task = Action("pl_previous");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
+        public static void ToggleLoop(Boolean loop, Boolean repeat)
+        {
+            var act = "pl_loop";
+            if (loop || repeat)
+            {
+                act = "pl_repeat";
+            }
+            var task = Action(act);
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
         public static void AdjustVolume(Int32 value)
         {
             var task = Action($"volume&val={value}");
@@ -62,22 +123,25 @@
         }
 
         public static Information GetTrackInfo()
-        {
-            var trackInfo = new Information();
-            if (null == GetDataFromResponse(ResposeData))
+        {            
+            var responseDataJo = GetDataFromResponse(ResposeData);
+            var responseJo = responseDataJo["information"]["category"]["meta"];
+            if (null == responseDataJo || null == responseJo)
             {
                 return null;
             }
-            var responseJo = GetDataFromResponse(ResposeData)["information"]["category"]["meta"];
-            trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
-            trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
-            trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
-            trackInfo.Category.Meta.ArtworkUrl = responseJo["artwork_url"]?.ToString();
-            trackInfo.TrackState.State = GetDataFromResponse(ResposeData)["state"]?.ToString();
-            trackInfo.TrackState.Loop = (Boolean)GetDataFromResponse(ResposeData)["loop"];
-            trackInfo.TrackState.Time = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
-            trackInfo.TrackState.Length = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
-            return trackInfo;
+            
+            _trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
+            _trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
+            _trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
+            _trackInfo.Category.Meta.ArtworkUrl = responseJo["artwork_url"]?.ToString();
+            _trackInfo.TrackState.State = GetDataFromResponse(ResposeData)["state"]?.ToString();
+            _trackInfo.TrackState.Loop = GetDataFromResponse(ResposeData)["loop"].ToString() == "True";
+            _trackInfo.TrackState.Repeat = GetDataFromResponse(ResposeData)["repeat"].ToString() == "True";
+            _trackInfo.TrackState.Random = GetDataFromResponse(ResposeData)["random"].ToString() == "True";
+            _trackInfo.TrackState.Time = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
+            _trackInfo.TrackState.Length = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
+            return _trackInfo;
         }
 
         public static HashSet<PlaylistItem> GetPlaylistInfo()
@@ -131,7 +195,7 @@
             }
             else
             {
-                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC application", null);
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application", null);
             }
         }
 

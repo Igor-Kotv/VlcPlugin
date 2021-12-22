@@ -33,7 +33,7 @@ namespace Loupedeck.VlcPlugin
             // loupedeck:callback/plugin/Vlc/
             if (!e.Parameters.IsNullOrEmpty())
             {
-                this.SetPluginSetting("password", e.Parameters, true);                
+                this.SetPluginSetting("password", e.Parameters, false);                
                 this.ConnectVlc();
             }
         }

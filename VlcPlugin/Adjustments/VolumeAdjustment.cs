@@ -38,8 +38,8 @@
 
         protected override void RunCommand(String actionParameter)
         {
-            this._initialVolume = 256;
-            VlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
+            this._initialVolume = 0;
+            VlcPlugin.AdjustVolume((Int32)this._initialVolume);
             this.ActionImageChanged(actionParameter);
         }
 

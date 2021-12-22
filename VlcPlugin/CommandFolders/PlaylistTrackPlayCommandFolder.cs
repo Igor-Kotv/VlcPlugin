@@ -40,6 +40,10 @@
             return "";
         }
 
+        public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize) => this.TrackIsCurrent(commandParameter)
+            ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.PlayPause.png")
+            : null;
+
         public override void RunCommand(String commandParameter)
         {
             var playlist = VlcPlugin.GetPlaylistInfo();
@@ -59,6 +63,13 @@
             {
                 Tracer.Trace($"Playlist is empty or action obtain an error: ", e);
             }
+        }
+
+        private Boolean TrackIsCurrent(String commandParameter)
+        {
+            var playlist = VlcPlugin.GetPlaylistInfo();
+            var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
+            return !track.Current.IsNullOrEmpty();
         }
     }
 

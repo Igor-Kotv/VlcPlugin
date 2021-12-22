@@ -42,6 +42,8 @@
     {
         public String State { get; set; }
         public Boolean Loop { get; set; }
+        public Boolean Repeat { get; set; }
+        public Boolean Random { get; set; }
         public Double Time { get; set; }
         public Double Length { get; set; }
     }

@@ -50,9 +50,9 @@
 
         protected override String GetAdjustmentValue(String actionParameter)
         {
-
             var time = TimeSpan.FromSeconds(this._initialPosition);
-            return time.ToString(@"h\:mm\:ss");
+            var format = VlcPlugin.TrackLength >= 3600 ? @"h\:mm\:ss" : @"mm\:ss";
+            return time.ToString(format);
         }
 
         protected override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize) => "Back to the start";

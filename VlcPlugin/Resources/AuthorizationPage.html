@@ -4,15 +4,38 @@
 <head>
     <meta charset="utf-8" />
     <title>VLC plugin authorization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/e/e6/VLC_Icon.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         let url;
         function onEntering() {
             var passwordValue = document.getElementById("passwordInput").value;
             url = "loupedeck:callback/plugin/Vlc/" + passwordValue;
         }
+
         function openUrl() {
-            window.location.href = url;
+            if (url) {
+                var loupedeck_popup = window.open(url);
+                loupedeck_popup.onbeforeunload = function () {
+                    document.getElementById("result").innerHTML = "You All Set!";
+                };
+                document.getElementById("input_contnainer").style.display = 'none';
+                document.getElementById("passwordInputLabel").style.display = 'none';
+                document.getElementById("checkCircle").style.display = 'block';
+            }
         }
+
+        function onLoad() {
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.querySelector('#passwordInput');
+            togglePassword.addEventListener('click', function (e) {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+
     </script>
     <style>
         form {
@@ -23,17 +46,61 @@
             top: 40%;
             position: absolute;
             border-radius: 4px;
+            height: 4em;
+            width: 19em;
         }
-        input{
+
+        input {
             font-size: 1em;
+            width: 15em;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            color: black;
+            height: 1.3em;
+            width: 4em;
+            border-radius: 4px;
+            border: 1px solid azure;
+        }
+
+            a:hover {
+                background-color: lightgray;
+            }
+
+        .inputContainer {
+            display: flex;
+            gap: 0.5em;
+        }
+
+        .field-icon {
+            margin-left: -1.7em;
+            cursor: pointer;
+            color: lightgray;
+        }
+
+        #result {
+            text-align: center;
+            margin: 0;
+        }
+
+        .result-check {
+            display: none;
+            text-align: center;
         }
     </style>
 </head>
-<body>
+<body onload="onLoad()">
     <form>
-        <label for="passwordInput">Password:</label>
-        <input type="password" id="passwordInput" onchange="onEntering()">
-        <a href="javascript:void(0)" id="linkButton" onclick="openUrl()">Sign in</a>
+        <label for="passwordInput" id="passwordInputLabel">Enter VLC Lua interface Password</label><br />
+        <div class="inputContainer" id="input_contnainer">
+            <div class="col-md-6">
+                <input type="password" id="passwordInput" onchange="onEntering()"> <i id="togglePassword" class="fa fa-fw fa-eye field-icon"></i>
+            </div>
+            <a href="javascript:void(0)" id="linkButton" onclick="openUrl()">Sign in</a>
+        </div><i id="checkCircle" class="fa fa-check-circle result-check" style="font-size:1.5em;color:green"></i><h4 id="result"></h4>
     </form>
 </body>
 </html>
