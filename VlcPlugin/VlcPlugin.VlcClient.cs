@@ -125,22 +125,27 @@
         public static Information GetTrackInfo()
         {            
             var responseDataJo = GetDataFromResponse(ResposeData);
-            var responseJo = responseDataJo["information"]["category"]["meta"];
-            if (null == responseDataJo || null == responseJo)
+            if (null == responseDataJo)
             {
                 return null;
             }
-            
-            _trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
-            _trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
-            _trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
-            _trackInfo.Category.Meta.ArtworkUrl = responseJo["artwork_url"]?.ToString();
-            _trackInfo.TrackState.State = GetDataFromResponse(ResposeData)["state"]?.ToString();
-            _trackInfo.TrackState.Loop = GetDataFromResponse(ResposeData)["loop"].ToString() == "True";
-            _trackInfo.TrackState.Repeat = GetDataFromResponse(ResposeData)["repeat"].ToString() == "True";
-            _trackInfo.TrackState.Random = GetDataFromResponse(ResposeData)["random"].ToString() == "True";
-            _trackInfo.TrackState.Time = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
-            _trackInfo.TrackState.Length = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
+            _trackInfo.TrackState.State = responseDataJo["state"]?.ToString();
+            _trackInfo.TrackState.Loop = responseDataJo["loop"].ToString() == "True";
+            _trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString() == "True";
+            _trackInfo.TrackState.Random = responseDataJo["random"].ToString() == "True";
+            _trackInfo.TrackState.Time = responseDataJo["time"].ToString().ParseDouble();
+            _trackInfo.TrackState.Length = responseDataJo["length"].ToString().ParseDouble();
+
+            var responseJo = responseDataJo["information"]?["category"]?["meta"];
+
+            if (null != responseJo)
+            {
+                _trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
+                _trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
+                _trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
+                _trackInfo.Category.Meta.ArtworkUrl = responseJo["artwork_url"]?.ToString();
+            }
+
             return _trackInfo;
         }
 
