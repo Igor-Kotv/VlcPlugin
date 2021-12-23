@@ -98,17 +98,8 @@
     <EmbeddedResource Include="Resources\PluginIcon48x48.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ActionImages\Width50\VolumeDown.png" />
-    <EmbeddedResource Include="Resources\ActionImages\Width50\VolumeUp.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width50\JogBackwards50.png" />
     <EmbeddedResource Include="Resources\ActionImages\Width50\JogForward50.png" />
-    <EmbeddedResource Include="Resources\ActionImages\Width90\JogBackwards90.png" />
-    <EmbeddedResource Include="Resources\ActionImages\Width90\JogForward90.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ActionImages\Width90\TogglePlay90.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width90\TogglePlay.png" />

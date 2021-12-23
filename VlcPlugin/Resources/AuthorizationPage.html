@@ -11,7 +11,7 @@
         let url;
         function onEntering() {
             var passwordValue = document.getElementById("passwordInput").value;
-            url = "loupedeck:callback/plugin/Vlc/" + passwordValue;
+            url = "loupedeck:plugin/Vlc/callback/setPassword?" + passwordValue;
         }
 
         function openUrl() {

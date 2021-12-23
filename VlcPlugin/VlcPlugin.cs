@@ -29,11 +29,10 @@ namespace Loupedeck.VlcPlugin
         private void OnApplicationStopped(Object sender, EventArgs e) => this.ConnectVlc();
 
         private void OnUrlCallbackReceived(Object sender, UrlCallbackReceivedEventArgs e)
-        {
-            // loupedeck:callback/plugin/Vlc/
-            if (!e.Parameters.IsNullOrEmpty())
+        {                       
+            if ((e.Uri != null) && e.Uri.LocalPath.Equals("setPassword") && !String.IsNullOrEmpty(e.Uri.Query))
             {
-                this.SetPluginSetting("password", e.Parameters, false);                
+                this.SetPluginSetting("password", e.Uri.Query.Substring(1), false);
                 this.ConnectVlc();
             }
         }
