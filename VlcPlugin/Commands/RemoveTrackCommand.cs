@@ -15,9 +15,8 @@
             var playlist = VlcPlugin.GetPlaylistInfo();
             var trackInfo = VlcPlugin.GetTrackInfo();
             var itemIndex = playlist.IndexOf(item => item.Name == trackInfo.Category.Meta.Title);
-            
 
-            if (itemIndex <= playlist.Count)
+            if (itemIndex <= playlist.Count && itemIndex >= 0)
             {
                 var id = playlist.ElementAt(itemIndex).Id;
                 VlcPlugin.DeleteTrack(id);
