@@ -35,12 +35,7 @@
             var task = Action("pl_pause");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
-            if (null != GetDataFromResponse(ResposeData))
-            {
-                InitialVolume = GetDataFromResponse(ResposeData)["volume"].ToString().ParseDouble();
-                TrackLength = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
-                InitialPosition = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
-            }
+            SetInitialTrackValues();
         }
 
         public static void PlayTrack(String id)
@@ -48,6 +43,7 @@
             var task = Action($"pl_play&id={id}");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+            SetInitialTrackValues();
         }
 
         public static void DeleteTrack(String id)
@@ -55,6 +51,7 @@
             var task = Action($"pl_delete&id={id}");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+            SetInitialTrackValues();
         }
 
         public static void InputPlay(String inputMrl)
@@ -68,6 +65,7 @@
             var task = Action($"in_play&input={mrl}");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+            SetInitialTrackValues();
         }
 
         public static void Empty()
@@ -89,6 +87,7 @@
             var task = Action("pl_next");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+            SetInitialTrackValues();
         }
 
         public static void Previous()
@@ -96,6 +95,7 @@
             var task = Action("pl_previous");
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+            SetInitialTrackValues();
         }
 
         public static void Fullscreen()
@@ -208,12 +208,19 @@
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Cannot connect to VLC application, please set a password", _authUrl);
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", _authUrl);
                 }
             }
             else
             {
-                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application", null);
+                if(this.IsApplicationInstalled())
+                {
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null);
+                }
+                else
+                {
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not installed", null);
+                }
             }
         }
 
@@ -276,6 +283,16 @@
                 return null;
             }
 
+        }
+
+        private static void SetInitialTrackValues()
+        {
+            if (null != GetDataFromResponse(ResposeData))
+            {
+                InitialVolume = GetDataFromResponse(ResposeData)["volume"].ToString().ParseDouble();
+                TrackLength = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
+                InitialPosition = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
+            }
         }
 
         public static JObject GetDataFromResponse(String plalistData) => null != plalistData && ResposeMessage.IsSuccessStatusCode ? JObject.Parse(plalistData) : null;
