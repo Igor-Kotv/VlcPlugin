@@ -44,6 +44,7 @@
         public Boolean Loop { get; set; }
         public Boolean Repeat { get; set; }
         public Boolean Random { get; set; }
+        public Boolean Fullscreen { get; set; }
         public Double Time { get; set; }
         public Double Length { get; set; }
     }

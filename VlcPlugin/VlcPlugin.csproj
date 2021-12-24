@@ -73,6 +73,7 @@
     <Compile Include="Commands\ClearPlaylistCommand.cs" />
     <Compile Include="Commands\PlayInputProfileCommand.cs" />
     <Compile Include="Commands\RemoveTrackCommand.cs" />
+    <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\ToggleLoopCommand.cs" />
     <Compile Include="Commands\TogglePlayCommand.cs" />
     <Compile Include="Commands\ToggleRandomCommand.cs" />
@@ -133,6 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width50\PlayAndNavigateTracks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\ExitFullScreen.png" />
+    <EmbeddedResource Include="Resources\ActionImages\Width90\FullScreen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -98,6 +98,13 @@
             ResposeData = task.Result;
         }
 
+        public static void Fullscreen()
+        {
+            var task = Action("fullscreen");
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
+
         public static void ToggleLoop(Boolean loop, Boolean repeat)
         {
             var act = "pl_loop";
@@ -133,6 +140,7 @@
             _trackInfo.TrackState.Loop = responseDataJo["loop"].ToString() == "True";
             _trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString() == "True";
             _trackInfo.TrackState.Random = responseDataJo["random"].ToString() == "True";
+            _trackInfo.TrackState.Fullscreen = responseDataJo["fullscreen"].ToString() == "True";
             _trackInfo.TrackState.Time = responseDataJo["time"].ToString().ParseDouble();
             _trackInfo.TrackState.Length = responseDataJo["length"].ToString().ParseDouble();
 
@@ -156,8 +164,13 @@
             {
                 return null;
             }
-            var responseJa = (JArray)GetDataFromResponse(PlaylistResposeData)["children"];
-            var playlistJo = (JArray)responseJa[0]["children"];
+            var responseJa = (JArray)GetDataFromResponse(PlaylistResposeData)?["children"];
+            var playlistJo = (JArray)responseJa?[0]?["children"];
+
+            if (null == playlistJo)
+            {
+                return null;
+            }
 
             var playlist = new HashSet<PlaylistItem>();
 

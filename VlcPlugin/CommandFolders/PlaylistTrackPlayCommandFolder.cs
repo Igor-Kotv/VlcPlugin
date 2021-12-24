@@ -15,11 +15,7 @@
             this.Navigation = PluginDynamicFolderNavigation.EncoderArea;
         }
 
-        public override BitmapImage GetButtonImage(PluginImageSize imageSize)
-        {
-            var bitmapImage = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png");
-            return bitmapImage;
-        }
+        public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png");
 
         public override IEnumerable<String> GetButtonPressActionNames()
         {
