@@ -6,6 +6,8 @@
 
     class RemoveTrackCommand : PluginDynamicCommand
     {
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+
         public RemoveTrackCommand() : base("Remove Track", "Removes track from playlist", "Playback")
         {
         }
@@ -19,7 +21,7 @@
             if (itemIndex <= playlist.Count && itemIndex >= 0)
             {
                 var id = playlist.ElementAt(itemIndex).Id;
-                VlcPlugin.DeleteTrack(id);
+                this._vlcPlugin.DeleteTrack(id);
             }
         }
     }

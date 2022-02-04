@@ -5,6 +5,7 @@
 
     class NavigationAdjustment : PluginDynamicAdjustment
     {
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public NavigationAdjustment() : base("Play and Navigate", "Selects track in playlist", "Playback", true)
         {
@@ -14,15 +15,15 @@
         {
             if (ticks > 0)
             {
-                VlcPlugin.Next();
+                this._vlcPlugin.Next();
             }
             else
             {
-                VlcPlugin.Previous();
+                this._vlcPlugin.Previous();
             }
         }
 
-        protected override void RunCommand(String actionParameter) => VlcPlugin.Play();
+        protected override void RunCommand(String actionParameter) => this._vlcPlugin.Play();
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.PlayAndNavigateTracks.png");
 

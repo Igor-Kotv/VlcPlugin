@@ -6,13 +6,15 @@
     class ToggleRandomCommand : PluginDynamicCommand
     {
         private Boolean _random;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+
         public ToggleRandomCommand() : base("Toggle Random", "Toggles random playing of tracks in playlist", "Playback")
         {
         }
 
         protected override void RunCommand(String actionParameter)
         {
-            VlcPlugin.ToggleRandom();
+            this._vlcPlugin.ToggleRandom();
 
             var trackInfo = VlcPlugin.GetTrackInfo();
 

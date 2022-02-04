@@ -6,13 +6,15 @@
     class ToggleFullscreenCommand : PluginDynamicCommand
     {
         private Boolean _fullscreen;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+
         public ToggleFullscreenCommand() : base("Toggle Fullscreen", "Toggles video playing on fullscreen", "Playback")
         {
         }
 
         protected override void RunCommand(String actionParameter)
         {
-            VlcPlugin.Fullscreen();
+            this._vlcPlugin.Fullscreen();
 
             var trackInfo = VlcPlugin.GetTrackInfo();
 

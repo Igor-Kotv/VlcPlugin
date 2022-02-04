@@ -6,7 +6,7 @@
     class VolumeAdjustment : PluginDynamicAdjustment
     {
         private Double _initialVolume = VlcPlugin.InitialVolume;
-
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public VolumeAdjustment() : base("Volume", "Volume adjustment", "Level", true)
         {
@@ -21,7 +21,7 @@
                     this._initialVolume += 2.56;
                 }
 
-                VlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
+                this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
             }
             else
             {
@@ -30,7 +30,7 @@
                     this._initialVolume -= 2.56;
                 }
 
-                VlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
+                this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
             }
             this.ActionImageChanged(actionParameter);
 
@@ -39,7 +39,7 @@
         protected override void RunCommand(String actionParameter)
         {
             this._initialVolume = 0;
-            VlcPlugin.AdjustVolume((Int32)this._initialVolume);
+            this._vlcPlugin.AdjustVolume((Int32)this._initialVolume);
             this.ActionImageChanged(actionParameter);
         }
 

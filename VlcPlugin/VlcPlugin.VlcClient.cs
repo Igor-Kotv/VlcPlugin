@@ -30,31 +30,28 @@
 
         public static Double TrackLength { get; set; } = 0;
 
-        public static void Play()
+        public void Play()
         {
             var task = Action("pl_pause");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void PlayTrack(String id)
+        public void PlayTrack(String id)
         {
             var task = Action($"pl_play&id={id}");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void DeleteTrack(String id)
+        public void DeleteTrack(String id)
         {
             var task = Action($"pl_delete&id={id}");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void InputPlay(String inputMrl)
+        public void InputPlay(String inputMrl)
         {
             var mrl = Uri.EscapeDataString(inputMrl);
 
@@ -63,49 +60,43 @@
                 mrl = $"file:///{mrl}";
             }
             var task = Action($"in_play&input={mrl}");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void Empty()
+        public void Empty()
         {
             var task = Action("pl_empty");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
         }
 
-        public static void ToggleRandom()
+        public void ToggleRandom()
         {
             var task = Action("pl_random");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
         }
 
-        public static void Next()
+        public void Next()
         {
             var task = Action("pl_next");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void Previous()
+        public void Previous()
         {
             var task = Action("pl_previous");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
             SetInitialTrackValues();
         }
 
-        public static void Fullscreen()
+        public void Fullscreen()
         {
             var task = Action("fullscreen");
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
         }
 
-        public static void ToggleLoop(Boolean loop, Boolean repeat)
+        public void ToggleLoop(Boolean loop, Boolean repeat)
         {
             var act = "pl_loop";
             if (loop || repeat)
@@ -113,24 +104,23 @@
                 act = "pl_repeat";
             }
             var task = Action(act);
-            task.ContinueWith(t => t);
-            ResposeData = task.Result;
+            this.RunTask(task);
         }
 
-        public static void AdjustVolume(Int32 value)
+        public void AdjustVolume(Int32 value)
         {
             var task = Action($"volume&val={value}");
-            task.ContinueWith(t => t);
+            this.RunTask(task);
         }
 
-        public static void Seek(Double value)
+        public void Seek(Double value)
         {
             var task = Action($"seek&val={value}");
-            task.ContinueWith(t => t);
+            this.RunTask(task);
         }
 
         public static Information GetTrackInfo()
-        {            
+        {
             var responseDataJo = GetDataFromResponse(ResposeData);
             if (null == responseDataJo)
             {
@@ -213,7 +203,7 @@
             }
             else
             {
-                if(this.IsApplicationInstalled())
+                if (this.IsApplicationInstalled())
                 {
                     this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null);
                 }
@@ -230,7 +220,11 @@
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
-
+        private void RunTask(Task<String> task)
+        {
+            task.ContinueWith(t => t);
+            ResposeData = task.Result;
+        }
 
         private static async Task<String> Action(String commandName)
         {

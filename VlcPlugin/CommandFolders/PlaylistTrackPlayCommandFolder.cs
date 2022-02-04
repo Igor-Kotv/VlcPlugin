@@ -7,6 +7,8 @@
 
     internal class PlaylistTrackPlayCommandFolder : PluginDynamicFolder
     {
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+
         public PlaylistTrackPlayCommandFolder()
         {
             this.DisplayName = "Playlist";
@@ -48,10 +50,10 @@
             {
                 if (track.Current.IsNullOrEmpty())
                 {
-                    VlcPlugin.PlayTrack(commandParameter);
+                    this._vlcPlugin.PlayTrack(commandParameter);
                 }
                 else
-                { VlcPlugin.Play(); }
+                { this._vlcPlugin.Play(); }
 
                 this.CommandImageChanged(commandParameter);
             }

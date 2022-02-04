@@ -7,6 +7,7 @@
     {
         private Boolean _loopState;
         private Boolean _repeatState;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public ToggleLoopCommand() : base("Toggle Loop", "Toggles repeat playlist or one track", "Playback")
         {
@@ -14,7 +15,7 @@
 
         protected override void RunCommand(String actionParameter)
         {
-            VlcPlugin.ToggleLoop(this._loopState, this._repeatState);
+            this._vlcPlugin.ToggleLoop(this._loopState, this._repeatState);
 
             var trackInfo = VlcPlugin.GetTrackInfo();
 

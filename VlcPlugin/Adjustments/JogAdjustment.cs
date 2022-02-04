@@ -7,6 +7,7 @@
     {
         private Boolean _forward = true;
         private Double _initialPosition = VlcPlugin.InitialPosition;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public JogAdjustment() : base("Jog", "Scroll through track", "Playback", true)
         {
@@ -30,14 +31,14 @@
                     this._initialPosition -= 1;
                 }
             }
-            VlcPlugin.Seek(this._initialPosition);
+            this._vlcPlugin.Seek(this._initialPosition);
             this.ActionImageChanged(actionParameter);
         }
 
         protected override void RunCommand(String actionParameter)
         {
             this._initialPosition = 0;
-            VlcPlugin.Seek(this._initialPosition);
+            this._vlcPlugin.Seek(this._initialPosition);
             this.ActionImageChanged(actionParameter);
         }
 

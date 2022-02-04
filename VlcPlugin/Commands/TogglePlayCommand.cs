@@ -6,13 +6,15 @@
     class TogglePlayCommand : PluginDynamicCommand
     {
         private String _state;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+
         public TogglePlayCommand() : base("Toggle Play", "Toggles play state", "Playback")
         {
         }
 
         protected override void RunCommand(String actionParameter)
         {
-            VlcPlugin.Play();
+            this._vlcPlugin.Play();
 
             var trackInfo = VlcPlugin.GetTrackInfo();
 
