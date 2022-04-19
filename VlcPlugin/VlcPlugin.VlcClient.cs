@@ -15,7 +15,7 @@
         private static readonly HttpClient client = new HttpClient();
         private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";
         private static readonly String _playlistUrl = @"http://127.0.0.1:8080/requests/playlist.json";
-        private static readonly String _authUrl = $"file:/C:/Users/{Environment.UserName}/AppData/Local/Loupedeck/PluginData/Vlc/AuthorizationPage.html";
+        private static readonly String _authPagePath = @"Loupedeck/PluginData/Vlc/AuthorizationPage.html";
         private static readonly Information _trackInfo = new Information();
 
         public static HttpResponseMessage ResposeMessage { get; private set; }
@@ -198,7 +198,7 @@
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", _authUrl);
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", this.GetAuthUrl());
                 }
             }
             else
@@ -291,5 +291,11 @@
 
         public static JObject GetDataFromResponse(String plalistData) => null != plalistData && ResposeMessage.IsSuccessStatusCode ? JObject.Parse(plalistData) : null;
 
+        private String GetAuthUrl()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Unix
+                ? $"file:///Users/{Environment.UserName}/.local/share/{_authPagePath}"
+                : $"file:/C:/Users/{Environment.UserName}/AppData/Local/{_authPagePath}";
+        }
     }
 }
