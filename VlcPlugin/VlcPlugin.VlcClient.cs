@@ -194,22 +194,22 @@
                 {
                     var data = GetDataFromResponse(ResposeData);
                     InitialVolume = null != data ? data["volume"].ToString().ToString().ParseDouble() : 256;
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Normal, "Connected", null);
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Normal, "Connected", null, null);
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", this.GetAuthUrl());
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", this.GetAuthUrl(), "Password form");
                 }
             }
             else
             {
                 if (this.IsApplicationInstalled())
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null);
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null, null);
                 }
                 else
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not installed", null);
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not installed", null, null);
                 }
             }
         }
