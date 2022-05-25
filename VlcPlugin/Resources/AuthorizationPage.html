@@ -19,6 +19,7 @@
                 var loupedeck_popup = window.open(url);
                 loupedeck_popup.onbeforeunload = function () {
                     document.getElementById("result").innerHTML = "You All Set!";
+                    document.getElementById("message").innerHTML = "Check plugin status. If password is wrong - reload the page and enter the correct one.";
                 };
                 document.getElementById("input_contnainer").style.display = 'none';
                 document.getElementById("passwordInputLabel").style.display = 'none';
@@ -46,7 +47,7 @@
             top: 40%;
             position: absolute;
             border-radius: 4px;
-            height: 4em;
+            height: 7em;
             width: 19em;
         }
 
@@ -81,7 +82,7 @@
             color: lightgray;
         }
 
-        #result {
+        #result, #message {
             text-align: center;
             margin: 0;
         }
@@ -100,7 +101,7 @@
                 <input type="password" id="passwordInput" onchange="onEntering()"> <i id="togglePassword" class="fa fa-fw fa-eye field-icon"></i>
             </div>
             <a href="javascript:void(0)" id="linkButton" onclick="openUrl()">Sign in</a>
-        </div><i id="checkCircle" class="fa fa-check-circle result-check" style="font-size:1.5em;color:green"></i><h4 id="result"></h4>
+        </div><i id="checkCircle" class="fa fa-check-circle result-check" style="font-size:1.5em;color:green"></i><h4 id="result"></h4><p id="message"></p>
     </form>
 </body>
 </html>

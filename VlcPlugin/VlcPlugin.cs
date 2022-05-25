@@ -30,7 +30,7 @@ namespace Loupedeck.VlcPlugin
 
         private void OnUrlCallbackReceived(Object sender, UrlCallbackReceivedEventArgs e)
         {
-            if ((e.Uri != null) && e.Uri.LocalPath.Equals("setPassword") && !String.IsNullOrEmpty(e.Uri.Query))
+            if ((e.Uri != null) && e.Uri.LocalPath.Contains("setPassword") && !String.IsNullOrEmpty(e.Uri.Query))
             {
                 this.SetPluginSetting("password", e.Uri.Query.Substring(1), false);
                 this.ConnectVlc();
