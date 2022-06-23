@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("VLC media player")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Plugin for remote control of VLC media player using Loupedeck consoles.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ihor Kotvytskyi")]
 [assembly: AssemblyProduct("VLC plugin for Loupedeck")]
-[assembly: AssemblyCopyright("LoupedeckOy")]
+[assembly: AssemblyCopyright("Copyright (c) 2022 Loupedeck Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

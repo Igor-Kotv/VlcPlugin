@@ -1,0 +1,24 @@
+type: plugin4
+name: VlcPlugin
+displayName: VLC media player
+version: 1.0.0
+author: Ihor Kotvytskyi
+copyright: Copyright (c) 2022 Loupedeck Ltd.
+
+supportedDevices:
+    - LoupedeckCt  
+    - LoupedeckLive
+
+pluginType: DotNetAny
+
+pluginCapabilities:
+    - HasNoApplication
+    - NoUserInputEmulation
+
+pluginFileName: VlcPlugin.dll
+
+license: MIT
+licenseUrl: https://opensource.org/licenses/MIT
+
+homePageUrl: https://github.com/Igor-Kotv/VlcPlugin
+supportPageUrl: https://github.com/Igor-Kotv/VlcPlugin
