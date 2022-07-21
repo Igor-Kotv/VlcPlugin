@@ -203,14 +203,7 @@
             }
             else
             {
-                if (this.IsApplicationInstalled())
-                {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null, null);
-                }
-                else
-                {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not installed", null, null);
-                }
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null, null);
             }
         }
 
