@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
 
     using System;
@@ -6,7 +6,7 @@
 
     class RemoveTrackCommand : PluginDynamicCommand
     {
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public RemoveTrackCommand() : base("Remove Track", "Removes track from playlist", "Playback")
         {
@@ -14,8 +14,8 @@
 
         protected override void RunCommand(String actionParameter)
         {
-            var playlist = VlcPlugin.GetPlaylistInfo();
-            var trackInfo = VlcPlugin.GetTrackInfo();
+            var playlist = Vlc.GetPlaylistInfo();
+            var trackInfo = Vlc.GetTrackInfo();
             var itemIndex = playlist.IndexOf(item => item.Name == trackInfo.Category.Meta.Title);
 
             if (itemIndex <= playlist.Count && itemIndex >= 0)

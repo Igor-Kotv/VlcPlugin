@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.VlcPlugin.CommandFolders
+﻿namespace Loupedeck.Vlc.CommandFolders
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
 
     internal class PlaylistTrackPlayCommandFolder : PluginDynamicFolder
     {
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public PlaylistTrackPlayCommandFolder()
         {
@@ -17,17 +17,17 @@
             this.Navigation = PluginDynamicFolderNavigation.EncoderArea;
         }
 
-        public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png");
+        public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png");
 
         public override IEnumerable<String> GetButtonPressActionNames()
         {
-            var playlist = VlcPlugin.GetPlaylistInfo();
+            var playlist = Vlc.GetPlaylistInfo();
             return playlist != null && playlist.Any() ? playlist.Select(x => this.CreateCommandName(x.Id)) : new List<String>();
         }
 
         public override String GetCommandDisplayName(String commandParameter, PluginImageSize imageSize)
         {
-            var playlist = VlcPlugin.GetPlaylistInfo();
+            var playlist = Vlc.GetPlaylistInfo();
             var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
             if (null != track)
             {
@@ -39,12 +39,12 @@
         }
 
         public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize) => this.TrackIsCurrent(commandParameter)
-            ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.PlayPause.png")
+            ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png")
             : null;
 
         public override void RunCommand(String commandParameter)
         {
-            var playlist = VlcPlugin.GetPlaylistInfo();
+            var playlist = Vlc.GetPlaylistInfo();
             var track = playlist.FirstOrDefault(x => x.Id == commandParameter);
             try
             {
@@ -65,7 +65,7 @@
 
         private Boolean TrackIsCurrent(String commandParameter)
         {
-            var playlist = VlcPlugin.GetPlaylistInfo();
+            var playlist = Vlc.GetPlaylistInfo();
             var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
             return !track.Current.IsNullOrEmpty();
         }

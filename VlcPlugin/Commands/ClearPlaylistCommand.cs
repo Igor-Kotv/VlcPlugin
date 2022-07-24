@@ -1,11 +1,11 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
 
     using System;
 
     class ClearPlaylistCommand : PluginDynamicCommand
     {
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public ClearPlaylistCommand() : base("Clear Playlist", "Removes all media from playlist!", "Playback")
         {

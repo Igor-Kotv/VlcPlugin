@@ -1,11 +1,11 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
 
     using System;
 
     class PlayInputProfileCommand : PluginDynamicCommand
     {
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public PlayInputProfileCommand() : base("Play Media", "Starts playing specified media file or folder with media files", "Play Media") => this.MakeProfileAction("text;Enter file path or URL to a media file:");
 

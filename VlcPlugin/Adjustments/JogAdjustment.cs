@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
     using System;
 
@@ -6,8 +6,8 @@
     class JogAdjustment : PluginDynamicAdjustment
     {
         private Boolean _forward = true;
-        private Double _initialPosition = VlcPlugin.InitialPosition;
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private Double _initialPosition = Vlc.InitialPosition;
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public JogAdjustment() : base("Jog", "Scroll through track", "Playback", true)
         {
@@ -18,7 +18,7 @@
             if (ticks > 0)
             {
                 this._forward = true;
-                if (this._initialPosition < VlcPlugin.TrackLength)
+                if (this._initialPosition < Vlc.TrackLength)
                 {
                     this._initialPosition += 1;
                 }
@@ -45,14 +45,14 @@
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
             return this._forward
-                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.JogForward50.png")
-                : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.JogBackwards50.png");
+                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.JogForward50.png")
+                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.JogBackwards50.png");
         }
 
         protected override String GetAdjustmentValue(String actionParameter)
         {
             var time = TimeSpan.FromSeconds(this._initialPosition);
-            var format = VlcPlugin.TrackLength >= 3600 ? @"h\:mm\:ss" : @"mm\:ss";
+            var format = Vlc.TrackLength >= 3600 ? @"h\:mm\:ss" : @"mm\:ss";
             return time.ToString(format);
         }
 

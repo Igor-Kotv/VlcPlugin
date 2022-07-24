@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VlcPlugin", "VlcPlugin\VlcPlugin.csproj", "{1ED29E48-0DF0-425A-9648-4DD393EBB248}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vlc", "VlcPlugin\Vlc.csproj", "{1ED29E48-0DF0-425A-9648-4DD393EBB248}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

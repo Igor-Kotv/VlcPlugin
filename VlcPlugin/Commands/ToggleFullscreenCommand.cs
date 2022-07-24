@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
 
     using System;
@@ -6,7 +6,7 @@
     class ToggleFullscreenCommand : PluginDynamicCommand
     {
         private Boolean _fullscreen;
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public ToggleFullscreenCommand() : base("Toggle Fullscreen", "Toggles video playing on fullscreen", "Playback")
         {
@@ -16,7 +16,7 @@
         {
             this._vlcPlugin.Fullscreen();
 
-            var trackInfo = VlcPlugin.GetTrackInfo();
+            var trackInfo = Vlc.GetTrackInfo();
 
             if (null != trackInfo)
             {
@@ -26,8 +26,8 @@
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => this._fullscreen
-            ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.FullScreen.png")
-            : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.ExitFullScreen.png");
+            ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.FullScreen.png")
+            : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.ExitFullScreen.png");
     }
 
 }

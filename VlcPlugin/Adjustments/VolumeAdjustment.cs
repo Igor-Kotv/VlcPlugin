@@ -1,12 +1,12 @@
-﻿namespace Loupedeck.VlcPlugin
+﻿namespace Loupedeck.Vlc
 {
     using System;
 
 
     class VolumeAdjustment : PluginDynamicAdjustment
     {
-        private Double _initialVolume = VlcPlugin.InitialVolume;
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private Double _initialVolume = Vlc.InitialVolume;
+        private readonly Vlc _vlcPlugin = new Vlc();
 
         public VolumeAdjustment() : base("Volume", "Volume adjustment", "Level", true)
         {
@@ -46,10 +46,10 @@
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
             return this._initialVolume < 30
-                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeLow.png")
+                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeLow.png")
                 : this._initialVolume > 30 && this._initialVolume < 150
-                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeMedium.png")
-                : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeHigh.png");
+                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeMedium.png")
+                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeHigh.png");
 
         }
         protected override String GetAdjustmentValue(String actionParameter)

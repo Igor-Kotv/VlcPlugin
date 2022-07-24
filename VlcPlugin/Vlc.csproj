@@ -7,8 +7,8 @@
     <ProjectGuid>{1ED29E48-0DF0-425A-9648-4DD393EBB248}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Loupedeck.VlcPlugin</RootNamespace>
-    <AssemblyName>VlcPlugin</AssemblyName>
+    <RootNamespace>Loupedeck.Vlc</RootNamespace>
+    <AssemblyName>Vlc</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -83,10 +83,10 @@
     <Compile Include="Commands\ToggleRandomCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VlcApplication.cs" />
-    <Compile Include="VlcPlugin.cs" />
+    <Compile Include="Vlc.cs" />
     <Compile Include="Adjustments\VolumeAdjustment.cs" />
-    <Compile Include="VlcPlugin.Installer.cs" />
-    <Compile Include="VlcPlugin.VlcClient.cs" />
+    <Compile Include="Vlc.Installer.cs" />
+    <Compile Include="Vlc.VlcClient.cs" />
     <Compile Include="VlcResponseModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -100,16 +100,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\PluginIcon16x16.png">
+    <EmbeddedResource Include="metadata\Icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\PluginIcon256x256.png">
+    <EmbeddedResource Include="metadata\Icon256x256.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\PluginIcon32x32.png">
+    <EmbeddedResource Include="metadata\Icon32x32.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\PluginIcon48x48.png">
+    <EmbeddedResource Include="metadata\Icon48x48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -158,8 +158,8 @@
   <!--Afterbuild event, which calls packing plugin binaries into .lplug4 archive-->
   <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <PropertyGroup>
-		<PluginToolPath Condition="$(OS) == 'Windows_NT'">C:\Program Files (x86)\Loupedeck\Loupedeck2\LoupedeckPluginTool.exe</PluginToolPath>
-        <PluginToolPath Condition="$(OS) != 'Windows_NT'">~/.local/share/Loupedeck/Plugins/$(MSBuildProjectName)/</PluginToolPath>
+      <PluginToolPath Condition="$(OS) == 'Windows_NT'">C:\Program Files (x86)\Loupedeck\Loupedeck2\LoupedeckPluginTool.exe</PluginToolPath>
+      <PluginToolPath Condition="$(OS) != 'Windows_NT'">~/.local/share/Loupedeck/Plugins/$(MSBuildProjectName)/</PluginToolPath>
       <OutputDirectoryPath>$([MSBuild]::NormalizePath('$(TargetDir)', '..', 'LibraryPackagesToInstall', '$(ProjectName).lplug4'))</OutputDirectoryPath>
     </PropertyGroup>
     <Message Text="Plugin tool path is $(PluginToolPath)" />

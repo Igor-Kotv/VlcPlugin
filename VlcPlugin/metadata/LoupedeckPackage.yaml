@@ -1,5 +1,5 @@
 type: plugin4
-name: VlcPlugin
+name: Vlc
 displayName: VLC media player
 version: 1.0.0
 author: Ihor Kotvytskyi
@@ -15,7 +15,12 @@ pluginCapabilities:
     - HasNoApplication
     - NoUserInputEmulation
 
-pluginFileName: VlcPlugin.dll
+pluginFileName: Vlc.dll
+
+pluginFolderWin: ./
+pluginFolderMac: ./
+
+icon256x256: metadata/Icon256x256.png
 
 license: MIT
 licenseUrl: https://opensource.org/licenses/MIT

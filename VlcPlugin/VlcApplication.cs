@@ -1,7 +1,6 @@
-namespace Loupedeck.VlcPlugin
+namespace Loupedeck.Vlc
 {
     using System;
-    using System.IO;
 
     public class VlcApplication : ClientApplication
     {
