@@ -7,6 +7,7 @@
     using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
 
     using Newtonsoft.Json.Linq;
 
@@ -16,7 +17,6 @@
         private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";
         private static readonly String _playlistUrl = @"http://127.0.0.1:8080/requests/playlist.json";
         private static readonly String _authPagePath = @"Loupedeck/PluginData/Vlc/AuthorizationPage.html";
-        private static readonly Information _trackInfo = new Information();
 
         public static HttpResponseMessage ResposeMessage { get; private set; }
         public static String ResposeData { get; set; }
@@ -34,21 +34,21 @@
         {
             var task = Action("pl_pause");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void PlayTrack(String id)
         {
             var task = Action($"pl_play&id={id}");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void DeleteTrack(String id)
         {
             var task = Action($"pl_delete&id={id}");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void InputPlay(String inputMrl)
@@ -61,7 +61,7 @@
             }
             var task = Action($"in_play&input={mrl}");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void Empty()
@@ -80,14 +80,14 @@
         {
             var task = Action("pl_next");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void Previous()
         {
             var task = Action("pl_previous");
             this.RunTask(task);
-            SetInitialTrackValues();
+            this.SetInitialTrackValues();
         }
 
         public void Fullscreen()
@@ -116,35 +116,51 @@
         public void Seek(Double value)
         {
             var task = Action($"seek&val={value}");
-            this.RunTask(task);
+            if (TryGetTrackInfo(out var trackInfo))
+            {
+                if (0 == InitialPosition || 0 == TrackLength)
+                {
+                    InitialPosition = trackInfo?.TrackState?.Time ?? 0;
+                    TrackLength = trackInfo?.TrackState?.Length ?? 0;
+                }
+                this.RunTask(task);
+            }
+
         }
 
         public static Information GetTrackInfo()
         {
+            var trackInfo = new Information();
             var responseDataJo = GetDataFromResponse(ResposeData);
             if (null == responseDataJo)
             {
                 return null;
             }
-            _trackInfo.TrackState.State = responseDataJo["state"]?.ToString();
-            _trackInfo.TrackState.Loop = responseDataJo["loop"].ToString() == "True";
-            _trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString() == "True";
-            _trackInfo.TrackState.Random = responseDataJo["random"].ToString() == "True";
-            _trackInfo.TrackState.Fullscreen = responseDataJo["fullscreen"].ToString() == "True";
-            _trackInfo.TrackState.Time = responseDataJo["time"].ToString().ParseDouble();
-            _trackInfo.TrackState.Length = responseDataJo["length"].ToString().ParseDouble();
+            trackInfo.TrackState.State = responseDataJo["state"]?.ToString();
+            trackInfo.TrackState.Loop = responseDataJo["loop"].ToString() == "True";
+            trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString() == "True";
+            trackInfo.TrackState.Random = responseDataJo["random"].ToString() == "True";
+            trackInfo.TrackState.Fullscreen = responseDataJo["fullscreen"].ToString() == "True";
+            trackInfo.TrackState.Time = responseDataJo["time"].ToString().ParseDouble();
+            trackInfo.TrackState.Length = responseDataJo["length"].ToString().ParseDouble();
 
             var responseJo = responseDataJo["information"]?["category"]?["meta"];
 
             if (null != responseJo)
             {
-                _trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
-                _trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
-                _trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
-                _trackInfo.Category.Meta.ArtworkUrl = responseJo["artwork_url"]?.ToString();
+                trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
+                trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
+                trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
+                trackInfo.Category.Meta.ArtworkUrl = HttpUtility.UrlDecode(responseJo["artwork_url"]?.ToString().Replace(@"file:///", ""));
             }
 
-            return _trackInfo;
+            return trackInfo;
+        }
+
+        public static Boolean TryGetTrackInfo(out Information trackInfo)
+        {
+            trackInfo = GetTrackInfo();
+            return null != trackInfo;
         }
 
         public static HashSet<PlaylistItem> GetPlaylistInfo()
@@ -184,16 +200,14 @@
                 Authorize();
             }
 
-            ResposeMessage = this.GetResponse(_baseUrl).Result;
-
-
-            if (null != ResposeMessage)
+            if (this.TryGetReponseMessage(out var responseMessage))
             {
+                ResposeMessage = responseMessage;
                 ResposeData = GetResponseString(_baseUrl).Result;
                 if (ResposeMessage.StatusCode == HttpStatusCode.OK)
                 {
                     var data = GetDataFromResponse(ResposeData);
-                    InitialVolume = null != data ? data["volume"].ToString().ToString().ParseDouble() : 256;
+                    InitialVolume = null != data ? data["volume"].ToString().ParseDouble() : 256;
                     this.OnPluginStatusChanged(Loupedeck.PluginStatus.Normal, "Connected", null, null);
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
@@ -203,8 +217,23 @@
             }
             else
             {
-                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Please start VLC media player application", null, null);
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application", null, null);
             }
+            InitialPosition = 0;
+            TrackLength = 0;
+        }
+
+        private Boolean TryGetReponseMessage(out HttpResponseMessage responseMessage)
+        {
+            var response = this.GetResponse(_baseUrl);
+            if (null != response.Result)
+            {
+                responseMessage = response.Result;
+                return true;
+            }
+
+            responseMessage = null;
+            return false;
         }
 
         public static void Authorize()
@@ -272,17 +301,18 @@
 
         }
 
-        private static void SetInitialTrackValues()
+        private void SetInitialTrackValues()
         {
-            if (null != GetDataFromResponse(ResposeData))
+            var response = GetDataFromResponse(ResposeData);
+            if (null != response)
             {
-                InitialVolume = GetDataFromResponse(ResposeData)["volume"].ToString().ParseDouble();
-                TrackLength = GetDataFromResponse(ResposeData)["length"].ToString().ParseDouble();
-                InitialPosition = GetDataFromResponse(ResposeData)["time"].ToString().ParseDouble();
+                InitialVolume = response["volume"].ToString().ParseDouble();
+                TrackLength = response["length"].ToString().ParseDouble();
+                InitialPosition = response["time"].ToString().ParseDouble();
             }
         }
 
-        public static JObject GetDataFromResponse(String plalistData) => null != plalistData && ResposeMessage.IsSuccessStatusCode ? JObject.Parse(plalistData) : null;
+        public static JObject GetDataFromResponse(String playlistData) => null != playlistData && ResposeMessage.IsSuccessStatusCode ? JObject.Parse(playlistData) : null;
 
         private String GetAuthUrl()
         {

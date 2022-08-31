@@ -7,7 +7,7 @@
     {
         private readonly Vlc _vlcPlugin = new Vlc();
 
-        public NavigationAdjustment() : base("Play and Navigate", "Selects track in playlist", "Playback", true)
+        public NavigationAdjustment() : base("Navigate", "Selects track in playlist", "Playback navigation", false)
         {
         }
 
@@ -23,11 +23,7 @@
             }
         }
 
-        protected override void RunCommand(String actionParameter) => this._vlcPlugin.Play();
-
-        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.PlayAndNavigateTracks.png");
-
-        protected override String GetCommandDisplayName(String actionParameter, PluginImageSize imageSize) => "Play/Pause";
+        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.NavigateTracks.png");
     }
 
 }

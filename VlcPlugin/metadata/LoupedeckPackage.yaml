@@ -6,8 +6,7 @@ author: Ihor Kotvytskyi
 copyright: Copyright (c) 2022 Loupedeck Ltd.
 
 supportedDevices:
-    - LoupedeckCt  
-    - LoupedeckLive
+    - LoupedeckCtFamily
 
 pluginType: DotNetAny
 

@@ -34,7 +34,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,10 +75,12 @@
     <Compile Include="Adjustments\NavigationAdjustment.cs" />
     <Compile Include="CommandFolders\PlaylistTrackPlayCommandFolder.cs" />
     <Compile Include="Commands\ClearPlaylistCommand.cs" />
+    <Compile Include="Commands\Prev.cs" />
     <Compile Include="Commands\PlayInputProfileCommand.cs" />
     <Compile Include="Commands\RemoveTrackCommand.cs" />
     <Compile Include="Commands\ToggleFullscreenCommand.cs" />
     <Compile Include="Commands\ToggleLoopCommand.cs" />
+    <Compile Include="Commands\Next.cs" />
     <Compile Include="Commands\TogglePlayCommand.cs" />
     <Compile Include="Commands\ToggleRandomCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -114,10 +116,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ActionImages\Width50\JogBackwards50.png" />
-    <EmbeddedResource Include="Resources\ActionImages\Width50\JogForward50.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width90\TogglePlay.png" />
   </ItemGroup>
   <ItemGroup>
@@ -148,11 +146,18 @@
     <EmbeddedResource Include="Resources\ActionImages\Width90\RandomOn.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ActionImages\Width50\PlayAndNavigateTracks.png" />
+    <EmbeddedResource Include="Resources\ActionImages\Width50\NavigateTracks.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ActionImages\Width90\ExitFullScreen.png" />
     <EmbeddedResource Include="Resources\ActionImages\Width90\FullScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width50\Rewind.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ActionImages\Width90\PlaybackTrackNext.png" />
+    <EmbeddedResource Include="Resources\ActionImages\Width90\PlaybackTrackPrevious.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Afterbuild event, which calls packing plugin binaries into .lplug4 archive-->

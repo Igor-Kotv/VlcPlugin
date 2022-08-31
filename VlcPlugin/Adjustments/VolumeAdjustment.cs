@@ -14,14 +14,13 @@
 
         protected override void ApplyAdjustment(String actionParameter, Int32 ticks)
         {
+            this._initialVolume = Vlc.InitialVolume;
             if (ticks > 0)
             {
                 if (this._initialVolume < 320)
                 {
                     this._initialVolume += 2.56;
-                }
-
-                this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
+                }                
             }
             else
             {
@@ -29,9 +28,9 @@
                 {
                     this._initialVolume -= 2.56;
                 }
-
-                this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
             }
+            this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
+            Vlc.InitialVolume = this._initialVolume;
             this.ActionImageChanged(actionParameter);
 
         }
@@ -39,6 +38,7 @@
         protected override void RunCommand(String actionParameter)
         {
             this._initialVolume = 0;
+            Vlc.InitialVolume = 0;
             this._vlcPlugin.AdjustVolume((Int32)this._initialVolume);
             this.ActionImageChanged(actionParameter);
         }

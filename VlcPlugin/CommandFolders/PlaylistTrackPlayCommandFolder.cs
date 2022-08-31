@@ -38,9 +38,20 @@
             return "";
         }
 
-        public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize) => this.TrackIsCurrent(commandParameter)
-            ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png")
-            : null;
+        public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize)
+        {
+            var trackImage = this.TrackIsCurrent(commandParameter) ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png") : null;
+            if (Vlc.TryGetTrackInfo(out var trackInfo))
+            {
+                var filePath = trackInfo.Category.Meta.ArtworkUrl;
+                if (!filePath.IsNullOrEmpty())
+                {
+                    trackImage = BitmapImage.FromFile(trackInfo.Category.Meta.ArtworkUrl);
+                }
+            }
+
+            return trackImage;
+        }
 
         public override void RunCommand(String commandParameter)
         {

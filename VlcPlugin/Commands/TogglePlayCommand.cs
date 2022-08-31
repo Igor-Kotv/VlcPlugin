@@ -25,9 +25,22 @@
             }
         }
 
-        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => this._state.IsNullOrEmpty() || (!this._state.IsNullOrEmpty() && this._state != "playing")
-            ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png")
-            : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.Pause.png");
+        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
+        {
+            var trackImage = this._state.IsNullOrEmpty() || (!this._state.IsNullOrEmpty() && this._state != "playing")
+                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png")
+                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.Pause.png");
+
+            if (Vlc.TryGetTrackInfo(out var trackInfo))
+            {
+                var filePath = trackInfo.Category.Meta.ArtworkUrl;
+                if (!filePath.IsNullOrEmpty())
+                {
+                    trackImage = BitmapImage.FromFile(trackInfo.Category.Meta.ArtworkUrl);
+                }
+            }
+            return trackImage;
+        }
     }
 
 }
