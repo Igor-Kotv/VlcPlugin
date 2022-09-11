@@ -9,6 +9,8 @@ To enable the HTTP control interface as a primary or extra interface, go to: **T
 
 <img src="https://github.com/Igor-Kotv/VlcPlugin/blob/master/SetPasswordUpdated.png" />
 
-**Plugin created using Loupedeck plugin SDK** <a href="https://github.com/Loupedeck/LoupedeckPluginSdk4/wiki">More info</a><br/>
+- **Plugin created using <a href="https://github.com/Loupedeck/LoupedeckPluginSdk4/wiki">Loupedeck plugin SDK</a>**<br/>
 
-<a href="https://wiki.videolan.org/">VideoLAN's Wiki</a>
+- <a href="https://wiki.videolan.org/VLC_media_player/">VideoLAN's Wiki</a>
+
+- Contact: ihor.kotvytskyi@loupedeck.com
