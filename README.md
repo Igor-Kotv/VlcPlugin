@@ -1,14 +1,14 @@
 # VlcPlugin for Loupedeck (CT, Live)
 
 ## Set up VLC media player
-To enable the HTTP control interface as a primary or extra interface, go to Tools → Preferences (select "All" radio-button) → Interface → Main interfaces → check "Web":
+To enable the HTTP control interface as a primary or extra interface, go to: **TOOLS → PREFERANCES** (select **"ALL"** radio-button) → **INTERFACE → MAIN INTERFACES → check "WEB":**
 
-<img src="https://wiki.videolan.org/images/VLC_2.0_Activate_HTTP.png" />
+<img src="https://github.com/Igor-Kotv/VlcPlugin/blob/master/EnableWeb.png" />
 
-Set password:
+- **Set password:**
 
-<img src="https://github.com/Igor-Kotv/VlcPlugin/blob/master/SetPassword.png" />
+<img src="https://github.com/Igor-Kotv/VlcPlugin/blob/master/SetPasswordUpdated.png" />
 
-## Clone and build VLC plugin
+**Plugin created using Loupedeck plugin SDK** <a href="https://github.com/Loupedeck/LoupedeckPluginSdk4/wiki">More info</a><br/>
 
-<a href="https://github.com/Loupedeck/LoupedeckPluginSdk4/wiki">More info</a>
+<a href="https://wiki.videolan.org/">VideoLAN's Wiki</a>
