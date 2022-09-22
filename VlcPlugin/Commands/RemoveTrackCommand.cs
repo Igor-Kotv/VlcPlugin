@@ -15,7 +15,7 @@
         protected override void RunCommand(String actionParameter)
         {
             var playlist = Vlc.GetPlaylistInfo();
-            var trackInfo = Vlc.GetTrackInfo();
+            var trackInfo = this._vlcPlugin.GetTrackInfo();
             var itemIndex = playlist.IndexOf(item => item.Name == trackInfo.Category.Meta.Title);
 
             if (itemIndex <= playlist.Count && itemIndex >= 0)

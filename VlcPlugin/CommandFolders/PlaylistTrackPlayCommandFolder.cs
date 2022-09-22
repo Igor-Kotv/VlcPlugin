@@ -14,11 +14,13 @@
             this.DisplayName = "Playlist";
             this.GroupName = "Playback";
             this.Description = "Play any track from your playlist";
-            this.Navigation = PluginDynamicFolderNavigation.EncoderArea;
         }
+
+        public override PluginDynamicFolderNavigation GetNavigationArea(DeviceType _) => PluginDynamicFolderNavigation.EncoderArea;
 
         public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png");
 
+        [Obsolete]
         public override IEnumerable<String> GetButtonPressActionNames()
         {
             var playlist = Vlc.GetPlaylistInfo();
@@ -41,16 +43,16 @@
         public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize)
         {
             var trackImage = this.TrackIsCurrent(commandParameter) ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png") : null;
-            if (Vlc.TryGetTrackInfo(out var trackInfo))
-            {
-                var filePath = trackInfo.Category.Meta.ArtworkUrl;
-                if (!filePath.IsNullOrEmpty())
-                {
-                    trackImage = BitmapImage.FromFile(trackInfo.Category.Meta.ArtworkUrl);
-                }
-            }
 
-            return trackImage;
+            using (var bitmapBuilder = new BitmapBuilder(imageSize))
+            {
+                if (this._vlcPlugin.TryGetCoverArt(imageSize, out var coverArt))
+                {
+                    bitmapBuilder.DrawImage(coverArt);
+                }
+                bitmapBuilder.DrawImage(trackImage);
+                return bitmapBuilder.ToImage();
+            }
         }
 
         public override void RunCommand(String commandParameter)

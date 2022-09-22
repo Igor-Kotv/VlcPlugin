@@ -7,7 +7,6 @@
     using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
-    using System.Web;
 
     using Newtonsoft.Json.Linq;
 
@@ -116,7 +115,7 @@
         public void Seek(Double value)
         {
             var task = Action($"seek&val={value}");
-            if (TryGetTrackInfo(out var trackInfo))
+            if (this.TryGetTrackInfo(out var trackInfo))
             {
                 if (0 == InitialPosition || 0 == TrackLength)
                 {
@@ -128,19 +127,19 @@
 
         }
 
-        public static Information GetTrackInfo()
+        public Information GetTrackInfo()
         {
-            var trackInfo = new Information();
             var responseDataJo = GetDataFromResponse(ResposeData);
             if (null == responseDataJo)
             {
                 return null;
             }
+            var trackInfo = new Information();
             trackInfo.TrackState.State = responseDataJo["state"]?.ToString();
-            trackInfo.TrackState.Loop = responseDataJo["loop"].ToString() == "True";
-            trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString() == "True";
-            trackInfo.TrackState.Random = responseDataJo["random"].ToString() == "True";
-            trackInfo.TrackState.Fullscreen = responseDataJo["fullscreen"].ToString() == "True";
+            trackInfo.TrackState.Loop = responseDataJo["loop"].ToString().EqualsNoCase("true");
+            trackInfo.TrackState.Repeat = responseDataJo["repeat"].ToString().EqualsNoCase("true");
+            trackInfo.TrackState.Random = responseDataJo["random"].ToString().EqualsNoCase("true");
+            trackInfo.TrackState.Fullscreen = responseDataJo["fullscreen"].ToString().EqualsNoCase("true");
             trackInfo.TrackState.Time = responseDataJo["time"].ToString().ParseDouble();
             trackInfo.TrackState.Length = responseDataJo["length"].ToString().ParseDouble();
 
@@ -151,15 +150,20 @@
                 trackInfo.Category.Meta.Album = responseJo["album"]?.ToString();
                 trackInfo.Category.Meta.Title = responseJo["title"]?.ToString();
                 trackInfo.Category.Meta.TrackNumber = responseJo["track_number"]?.ToString();
-                trackInfo.Category.Meta.ArtworkUrl = HttpUtility.UrlDecode(responseJo["artwork_url"]?.ToString().Replace(@"file:///", ""));
+                var artWorkString = responseJo["artwork_url"]?.ToString();
+                if (!artWorkString.IsNullOrEmpty())
+                {
+                    artWorkString = this.SystemIsMac() ? artWorkString.Replace(@"file:///", "/") : artWorkString.Replace(@"file:///", "");
+                    trackInfo.Category.Meta.ArtworkUrl = Uri.UnescapeDataString(artWorkString);
+                }
             }
 
             return trackInfo;
         }
 
-        public static Boolean TryGetTrackInfo(out Information trackInfo)
+        public Boolean TryGetTrackInfo(out Information trackInfo)
         {
-            trackInfo = GetTrackInfo();
+            trackInfo = this.GetTrackInfo();
             return null != trackInfo;
         }
 
@@ -200,9 +204,10 @@
                 Authorize();
             }
 
-            if (this.TryGetReponseMessage(out var responseMessage))
+            ResposeMessage = this.GetResponse(_baseUrl).Result;
+
+            if (null != ResposeMessage)
             {
-                ResposeMessage = responseMessage;
                 ResposeData = GetResponseString(_baseUrl).Result;
                 if (ResposeMessage.StatusCode == HttpStatusCode.OK)
                 {
@@ -223,19 +228,6 @@
             TrackLength = 0;
         }
 
-        private Boolean TryGetReponseMessage(out HttpResponseMessage responseMessage)
-        {
-            var response = this.GetResponse(_baseUrl);
-            if (null != response.Result)
-            {
-                responseMessage = response.Result;
-                return true;
-            }
-
-            responseMessage = null;
-            return false;
-        }
-
         public static void Authorize()
         {
             var byteArray = Encoding.ASCII.GetBytes($":{Password}");
@@ -246,6 +238,22 @@
         {
             task.ContinueWith(t => t);
             ResposeData = task.Result;
+        }
+
+        public Boolean TryGetCoverArt(PluginImageSize imageSize, out BitmapImage coverArt)
+        {
+            coverArt = null;
+
+            if (this.TryGetTrackInfo(out var trackInfo))
+            {
+                var filePath = trackInfo.Category.Meta.ArtworkUrl;
+                if (!filePath.IsNullOrEmpty())
+                {
+                    coverArt = BitmapImage.FromFile(trackInfo.Category.Meta.ArtworkUrl);
+                    coverArt.Resize(imageSize);
+                }
+            }
+            return coverArt != null;
         }
 
         private static async Task<String> Action(String commandName)
@@ -316,9 +324,11 @@
 
         private String GetAuthUrl()
         {
-            return Environment.OSVersion.Platform == PlatformID.Unix
+            return this.SystemIsMac()
                 ? $"file:///Users/{Environment.UserName}/.local/share/{_authPagePath}"
                 : $"file:/C:/Users/{Environment.UserName}/AppData/Local/{_authPagePath}";
         }
+
+        public Boolean SystemIsMac() => Environment.OSVersion.Platform == PlatformID.Unix;
     }
 }

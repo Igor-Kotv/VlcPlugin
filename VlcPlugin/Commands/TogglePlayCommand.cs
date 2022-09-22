@@ -1,22 +1,24 @@
 ﻿namespace Loupedeck.Vlc
 {
-
     using System;
 
-    class TogglePlayCommand : PluginDynamicCommand
+    class TogglePlayCommand : PluginMultistateDynamicCommand
     {
         private String _state;
         private readonly Vlc _vlcPlugin = new Vlc();
 
         public TogglePlayCommand() : base("Toggle Play", "Toggles play state", "Playback")
         {
+            this.AddState("paused", "Play", "Start playing");
+            this.AddState("playing", "Pause", "Pause playing");
         }
 
         protected override void RunCommand(String actionParameter)
         {
             this._vlcPlugin.Play();
+            this.ToggleCurrentState();
 
-            var trackInfo = Vlc.GetTrackInfo();
+            var trackInfo = this._vlcPlugin.GetTrackInfo();
 
             if (null != trackInfo)
             {
@@ -25,21 +27,21 @@
             }
         }
 
-        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
+        protected override BitmapImage GetCommandImage(String actionParameter, Int32 stateIndex, PluginImageSize imageSize)
         {
-            var trackImage = this._state.IsNullOrEmpty() || (!this._state.IsNullOrEmpty() && this._state != "playing")
+            var trackImage = this.GetCurrentState().Name != "playing" && (this._state.IsNullOrEmpty() || (!this._state.IsNullOrEmpty() && this._state != "playing"))
                 ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png")
                 : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.Pause.png");
 
-            if (Vlc.TryGetTrackInfo(out var trackInfo))
+            using (var bitmapBuilder = new BitmapBuilder(imageSize))
             {
-                var filePath = trackInfo.Category.Meta.ArtworkUrl;
-                if (!filePath.IsNullOrEmpty())
+                if (this._vlcPlugin.TryGetCoverArt(imageSize, out var coverArt))
                 {
-                    trackImage = BitmapImage.FromFile(trackInfo.Category.Meta.ArtworkUrl);
+                    bitmapBuilder.DrawImage(coverArt);
                 }
+                bitmapBuilder.DrawImage(trackImage);
+                return bitmapBuilder.ToImage();
             }
-            return trackImage;
         }
     }
 

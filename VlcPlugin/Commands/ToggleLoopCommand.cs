@@ -17,7 +17,7 @@
         {
             this._vlcPlugin.ToggleLoop(this._loopState, this._repeatState);
 
-            var trackInfo = Vlc.GetTrackInfo();
+            var trackInfo = this._vlcPlugin.GetTrackInfo();
 
             if (null != trackInfo)
             {

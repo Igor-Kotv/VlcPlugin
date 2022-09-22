@@ -16,7 +16,7 @@
         {
             this._vlcPlugin.Fullscreen();
 
-            var trackInfo = Vlc.GetTrackInfo();
+            var trackInfo = this._vlcPlugin.GetTrackInfo();
 
             if (null != trackInfo)
             {
