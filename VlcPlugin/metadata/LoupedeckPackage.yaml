@@ -1,7 +1,7 @@
 type: plugin4
 name: Vlc
 displayName: VLC media player
-version: 1.0.0
+version: 1.1.0
 author: Ihor Kotvytskyi
 copyright: Copyright (c) 2022 Loupedeck Ltd.
 

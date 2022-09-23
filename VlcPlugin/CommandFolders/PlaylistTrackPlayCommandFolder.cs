@@ -16,12 +16,14 @@
             this.Description = "Play any track from your playlist";
         }
 
-        public override PluginDynamicFolderNavigation GetNavigationArea(DeviceType _) => PluginDynamicFolderNavigation.EncoderArea;
+        public override PluginDynamicFolderNavigation GetNavigationArea(DeviceType deviceType) =>
+            deviceType == DeviceType.Loupedeck50 ||
+            deviceType == DeviceType.Loupedeck60 ?
+            PluginDynamicFolderNavigation.ButtonArea : PluginDynamicFolderNavigation.EncoderArea;
 
         public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png");
 
-        [Obsolete]
-        public override IEnumerable<String> GetButtonPressActionNames()
+        public override IEnumerable<String> GetButtonPressActionNames(DeviceType _)
         {
             var playlist = Vlc.GetPlaylistInfo();
             return playlist != null && playlist.Any() ? playlist.Select(x => this.CreateCommandName(x.Id)) : new List<String>();
