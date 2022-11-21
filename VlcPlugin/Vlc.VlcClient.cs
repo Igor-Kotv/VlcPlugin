@@ -20,8 +20,6 @@
         public static HttpResponseMessage ResposeMessage { get; private set; }
         public static String ResposeData { get; set; }
 
-        public static String PlaylistResposeData { get; set; }
-
         public static String Password { get; set; } = "";
 
         public static Double InitialVolume { get; set; } = 256;
@@ -167,14 +165,14 @@
             return null != trackInfo;
         }
 
-        public static HashSet<PlaylistItem> GetPlaylistInfo()
+        public HashSet<PlaylistItem> GetPlaylistInfo()
         {
-            PlaylistResposeData = GetResponseString(_playlistUrl).Result;
-            if (null == GetDataFromResponse(PlaylistResposeData))
+            var playlistResposeData = GetResponseString(_playlistUrl).Result;
+            if (null == GetDataFromResponse(playlistResposeData))
             {
                 return null;
             }
-            var responseJa = (JArray)GetDataFromResponse(PlaylistResposeData)?["children"];
+            var responseJa = (JArray)GetDataFromResponse(playlistResposeData)?["children"];
             var playlistJo = (JArray)responseJa?[0]?["children"];
 
             if (null == playlistJo)

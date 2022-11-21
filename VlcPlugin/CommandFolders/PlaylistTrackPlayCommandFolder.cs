@@ -25,26 +25,25 @@
 
         public override IEnumerable<String> GetButtonPressActionNames(DeviceType _)
         {
-            var playlist = Vlc.GetPlaylistInfo();
+            var playlist = this._vlcPlugin.GetPlaylistInfo();
             return playlist != null && playlist.Any() ? playlist.Select(x => this.CreateCommandName(x.Id)) : new List<String>();
         }
 
         public override String GetCommandDisplayName(String commandParameter, PluginImageSize imageSize)
         {
-            var playlist = Vlc.GetPlaylistInfo();
+            var playlist = this._vlcPlugin.GetPlaylistInfo();
             var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
+
             if (null != track)
             {
-                var trackDisplayName = track.Current.IsNullOrEmpty() ? track?.Name : $"Playing:\n{track?.Name}";
-
-                return trackDisplayName;
+                return track.Current.IsNullOrEmpty() ? track?.Name : $"Playing:\n{track?.Name}";
             }
             return "";
         }
 
         public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize)
         {
-            var trackImage = this.TrackIsCurrent(commandParameter) ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png") : null;
+            var trackImage = EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png");
 
             using (var bitmapBuilder = new BitmapBuilder(imageSize))
             {
@@ -53,13 +52,13 @@
                     bitmapBuilder.DrawImage(coverArt);
                 }
                 bitmapBuilder.DrawImage(trackImage);
-                return bitmapBuilder.ToImage();
+                return this.TrackIsCurrent(commandParameter) ? bitmapBuilder.ToImage() : null;
             }
         }
 
         public override void RunCommand(String commandParameter)
         {
-            var playlist = Vlc.GetPlaylistInfo();
+            var playlist = this._vlcPlugin.GetPlaylistInfo();
             var track = playlist.FirstOrDefault(x => x.Id == commandParameter);
             try
             {
@@ -70,7 +69,7 @@
                 else
                 { this._vlcPlugin.Play(); }
 
-                this.CommandImageChanged(commandParameter);
+                this.ButtonActionNamesChanged();
             }
             catch (Exception e)
             {
@@ -80,7 +79,7 @@
 
         private Boolean TrackIsCurrent(String commandParameter)
         {
-            var playlist = Vlc.GetPlaylistInfo();
+            var playlist = this._vlcPlugin.GetPlaylistInfo();
             var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
             return !track.Current.IsNullOrEmpty();
         }
