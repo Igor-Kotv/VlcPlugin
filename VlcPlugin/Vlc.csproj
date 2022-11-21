@@ -22,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <!--Special override of OutputPath, which allows debug plugin under 'Debug' builds-->
     <OutputPath Condition="$(OS) == 'Windows_NT'">$(LocalAppData)\Loupedeck\Plugins\$(MSBuildProjectName)\</OutputPath>
-    <OutputPath Condition="$(OS) != 'Windows_NT'">$(LocalAppData)\Loupedeck\Plugins\Vlc</OutputPath>
+    <OutputPath Condition="$(OS) != 'Windows_NT'">$(LocalAppData)\Loupedeck\Plugins\$(MSBuildProjectName)\</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
