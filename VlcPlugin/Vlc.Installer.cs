@@ -5,10 +5,8 @@
 
     public partial class Vlc : Plugin
     {
-
         public override Boolean Install()
         {
-
             var pluginDataDirectory = this.GetPluginDataDirectory();
             if (!IoHelpers.EnsureDirectoryExists(pluginDataDirectory))
             {
@@ -29,6 +27,5 @@
             var filePath = Path.Combine(pluginDataDirectory, "AuthorizationPage.html");
             this.Assembly.ExtractFile("Loupedeck.Vlc.Resources.AuthorizationPage.html", filePath);
         }
-
     }
 }

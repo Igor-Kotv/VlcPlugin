@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -15,7 +17,8 @@
         private static readonly HttpClient client = new HttpClient();
         private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";
         private static readonly String _playlistUrl = @"http://127.0.0.1:8080/requests/playlist.json";
-        private static readonly String _authPagePath = @"Loupedeck/PluginData/Vlc/AuthorizationPage.html";
+        private String _redirectUrl;
+        private HttpListener _listener;
 
         public static HttpResponseMessage ResposeMessage { get; private set; }
         public static String ResposeData { get; set; }
@@ -26,6 +29,82 @@
         public static Double InitialPosition { get; set; } = 0;
 
         public static Double TrackLength { get; set; } = 0;
+
+        public void StartServer()
+        {
+            try
+            {
+                if (this._listener != null)
+                {
+                    return;
+                }
+
+                var randomNumbers = new Random();
+                var ports = Enumerable
+                    .Repeat(0, 100)
+                    .Select(i => randomNumbers.Next(1000, 9000))
+                    .ToArray();
+
+                if (!NetworkHelpers.TryGetFreeTcpPort(ports, out var port))
+                {
+                    return;
+                }
+
+                this._redirectUrl = $"http://localhost:{port}/";
+
+                this._listener = new HttpListener();
+                this._listener.Prefixes.Add(this._redirectUrl);
+                this._listener.Start();
+                this._listener.BeginGetContext(this.GetContextCallback, null);
+            }
+            catch (Exception e)
+            {
+                Tracer.Error($"Server Start error: {e.Message}", e);
+            }
+        }
+
+        public void GetContextCallback(IAsyncResult res)
+        {
+            var pluginDataDirectory = this.GetPluginDataDirectory();
+            var filePath = Path.Combine(pluginDataDirectory, "AuthorizationPage.html");
+            var webPage = File.ReadAllText(filePath);
+            var buffer = Encoding.UTF8.GetBytes(webPage);
+
+            this._listener.BeginGetContext(this.GetContextCallback, null);
+            var context = this._listener.EndGetContext(res);
+
+            var response = context.Response;
+            response.ContentType = "text/html";
+            response.ContentLength64 = buffer.Length;
+            response.StatusCode = 200;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
+            response.OutputStream.Close();
+        }
+
+        public void OpenAuthenticationUrl()
+        {
+            if (!this._listener.IsListening)
+            {
+                Tracer.Error("Server: Listener has not been started yet.");
+                return;
+            }
+
+            try
+            {
+                if (Helpers.IsWindows())
+                {
+                    System.Diagnostics.Process.Start(this._redirectUrl);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start("open", this._redirectUrl);
+                }
+            }
+            catch (Exception e)
+            {
+                Tracer.Error($"OpenAuthenticationUrl error opening browser: {e.Message}", e);
+            }
+        }
 
         public void Play()
         {
@@ -212,15 +291,17 @@
                     var data = GetDataFromResponse(ResposeData);
                     InitialVolume = null != data ? data["volume"].ToString().ParseDouble() : 256;
                     this.OnPluginStatusChanged(Loupedeck.PluginStatus.Normal, "Connected", null, null);
+                    this._vlcAccount.ReportLogin("", Password, "");
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password", this.GetAuthUrl(), "Password form");
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password");
+                    this._vlcAccount.ReportLogout();
                 }
             }
             else
             {
-                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application", null, null);
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not running");
             }
             InitialPosition = 0;
             TrackLength = 0;
@@ -318,14 +399,12 @@
             }
         }
 
-        public static JObject GetDataFromResponse(String playlistData) => null != playlistData && ResposeMessage.IsSuccessStatusCode ? JObject.Parse(playlistData) : null;
-
-        private String GetAuthUrl()
-        {
-            return this.SystemIsMac()
-                ? $"file:///Users/{Environment.UserName}/.local/share/{_authPagePath}"
-                : $"file:/C:/Users/{Environment.UserName}/AppData/Local/{_authPagePath}";
-        }
+        public static JObject GetDataFromResponse(String playlistData) =>
+           null != ResposeMessage &&
+           null != playlistData &&
+           ResposeMessage.IsSuccessStatusCode ?
+           JObject.Parse(playlistData) :
+           null;
 
         public Boolean SystemIsMac() => Environment.OSVersion.Platform == PlatformID.Unix;
     }

@@ -4,6 +4,22 @@ namespace Loupedeck.Vlc
 
     public partial class Vlc : Plugin
     {
+
+        private readonly PluginPreferenceAccount _vlcAccount;
+
+        public Vlc()
+        {
+            this._vlcAccount = new PluginPreferenceAccount("vlc-account")
+            {
+                DisplayName = "VLC",
+                IsRequired = true,
+                LoginUrlTitle = "Sign in to VLC",
+                LogoutUrlTitle = "Sign out from VLC"
+            };
+
+            this.PluginPreferences.Add(this._vlcAccount);
+        }
+
         public override void Load()
         {
             this.ConnectVlc();
@@ -12,6 +28,8 @@ namespace Loupedeck.Vlc
 
             this.ClientApplication.ApplicationStarted += this.OnApplicationStarted;
             this.ClientApplication.ApplicationStopped += this.OnApplicationStopped;
+            this._vlcAccount.LoginRequested += this.OnVlcAccountOnLoginRequested;
+            this._vlcAccount.LogoutRequested += this.OnVlcAccountOnLogoutRequested;
 
             this.ServiceEvents.UrlCallbackReceived += this.OnUrlCallbackReceived;
 
@@ -22,6 +40,8 @@ namespace Loupedeck.Vlc
             this.ClientApplication.ApplicationStarted -= this.OnApplicationStarted;
             this.ClientApplication.ApplicationStopped -= this.OnApplicationStopped;
             this.ServiceEvents.UrlCallbackReceived -= this.OnUrlCallbackReceived;
+            this._vlcAccount.LoginRequested -= this.OnVlcAccountOnLoginRequested;
+            this._vlcAccount.LogoutRequested -= this.OnVlcAccountOnLogoutRequested;
         }
 
         private void OnApplicationStarted(Object sender, EventArgs e) => this.ConnectVlc();
@@ -35,6 +55,24 @@ namespace Loupedeck.Vlc
                 this.SetPluginSetting("password", e.Uri.Query.Substring(1), false);
                 this.ConnectVlc();
             }
+        }
+
+        private void OnVlcAccountOnLoginRequested(Object sender, EventArgs e)
+        {
+            if (ResposeMessage == null)
+            {
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application before signing in");
+                return;
+            }
+
+            this.StartServer();
+            this.OpenAuthenticationUrl();
+        }
+
+        private void OnVlcAccountOnLogoutRequested(Object sender, EventArgs e)
+        {
+            this.SetPluginSetting("password", "", false);
+            this._vlcAccount.ReportLogout();
         }
 
         public void SetPluginIcons()
