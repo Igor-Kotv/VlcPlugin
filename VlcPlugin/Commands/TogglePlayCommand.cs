@@ -7,7 +7,7 @@
         private readonly Vlc _vlcPlugin = new Vlc();
         private String _state = "";
 
-        public TogglePlayCommand() : base("Toggle Play", "Toggles play state", "Playback")
+        public TogglePlayCommand() : base("Toggle Play", "Play/pause media", "Playback")
         {
             this.AddState("paused", "Play", "Start playing");
             this.AddState("playing", "Pause", "Pause playing");

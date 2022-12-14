@@ -34,11 +34,7 @@
             var playlist = this._vlcPlugin.GetPlaylistInfo();
             var track = playlist?.FirstOrDefault(x => x.Id == commandParameter);
 
-            if (null != track)
-            {
-                return track.Current.IsNullOrEmpty() ? track?.Name : $"Playing:\n{track?.Name}";
-            }
-            return "";
+            return null != track ? track.Current.IsNullOrEmpty() ? track?.Name : $"Playing:\n{track?.Name}" : "";
         }
 
         public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize)
