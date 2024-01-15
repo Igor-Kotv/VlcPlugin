@@ -6,6 +6,8 @@
     class JogAdjustment : PluginDynamicAdjustment
     {
         private Double _initialPosition = Vlc.InitialPosition;
+        private Double _initialLength = Vlc.TrackLength;
+
         private readonly Vlc _vlcPlugin = new Vlc();
 
         public JogAdjustment() : base("Jog", "Scroll through track and play", "Playback navigation", false)
@@ -14,10 +16,21 @@
 
         protected override void ApplyAdjustment(String actionParameter, Int32 ticks)
         {
-            this._initialPosition = Vlc.InitialPosition;
+            if (this._vlcPlugin.TryGetTrackInfo(out var trackInfo))
+            {
+                if ((0 == this._initialPosition) || (trackInfo.TrackState.Time != this._initialPosition))
+                {
+                    this._initialPosition = trackInfo.TrackState.Time;
+                }
+                if (trackInfo.TrackState.Length != this._initialLength)
+                {
+                    this._initialLength = trackInfo.TrackState.Length;
+                }
+            }
+
             if (ticks > 0)
             {
-                if (this._initialPosition < Vlc.TrackLength)
+                if (this._initialPosition < this._initialLength)
                 {
                     this._initialPosition += 1;
                 }
@@ -41,7 +54,7 @@
         protected override String GetAdjustmentValue(String actionParameter)
         {
             var time = TimeSpan.FromSeconds(this._initialPosition);
-            var format = Vlc.TrackLength >= 3600 ? @"h\:mm\:ss" : @"mm\:ss";
+            var format = this._initialLength >= 3600 ? @"h\:mm\:ss" : @"mm\:ss";
             return time.ToString(format);
         }
     }
