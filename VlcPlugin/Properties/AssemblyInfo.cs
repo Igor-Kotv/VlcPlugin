@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Plugin for remote control of VLC media player using Loupedeck consoles.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ihor Kotvytskyi")]
-[assembly: AssemblyProduct("VLC plugin for Loupedeck")]
-[assembly: AssemblyCopyright("Copyright (c) 2022 Loupedeck Ltd.")]
+[assembly: AssemblyProduct("VLC plugin")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1ED29E48-0DF0-425A-9648-4DD393EBB248")]
 
-[assembly: AssemblyVersion("1.1.0")]
+[assembly: AssemblyVersion("1.2.0")]

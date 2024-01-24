@@ -4,7 +4,6 @@ namespace Loupedeck.Vlc
 
     public partial class Vlc : Plugin
     {
-
         private readonly PluginPreferenceAccount _vlcAccount;
 
         public Vlc()
