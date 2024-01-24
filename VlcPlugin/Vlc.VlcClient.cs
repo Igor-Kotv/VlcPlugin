@@ -131,7 +131,7 @@
         {
             var mrl = Uri.EscapeDataString(inputMrl);
 
-            if (!mrl.StartsWith("http") && !mrl.StartsWith("rtsp") && !mrl.StartsWith("ftp"))
+            if (!mrl.StartsWithNoCase("http") && !mrl.StartsWithNoCase("rtsp") && !mrl.StartsWithNoCase("ftp"))
             {
                 mrl = $"file:///{mrl}";
             }
@@ -192,21 +192,12 @@
         public void Seek(Double value)
         {
             var task = Action($"seek&val={value}");
-            if (this.TryGetTrackInfo(out var trackInfo))
-            {
-                if (0 == InitialPosition || 0 == TrackLength)
-                {
-                    InitialPosition = trackInfo?.TrackState?.Time ?? 0;
-                    TrackLength = trackInfo?.TrackState?.Length ?? 0;
-                }
-                this.RunTask(task);
-            }
-
+            this.RunTask(task);
         }
 
         public Information GetTrackInfo()
         {
-            var responseDataJo = GetDataFromResponse(ResposeData);
+            var responseDataJo = GetDataFromResponse(GetResponseString(_baseUrl).Result);
             if (null == responseDataJo)
             {
                 return null;
