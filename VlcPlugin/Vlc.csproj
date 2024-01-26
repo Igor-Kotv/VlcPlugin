@@ -7,8 +7,8 @@
     <ProjectGuid>{1ED29E48-0DF0-425A-9648-4DD393EBB248}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Loupedeck.Vlc</RootNamespace>
-    <AssemblyName>Vlc</AssemblyName>
+    <RootNamespace>Loupedeck.VlcPlugin</RootNamespace>
+    <AssemblyName>VlcPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -87,7 +87,7 @@
     <Compile Include="Commands\ToggleRandomCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VlcApplication.cs" />
-    <Compile Include="Vlc.cs" />
+    <Compile Include="VlcPlugin.cs" />
     <Compile Include="Adjustments\VolumeAdjustment.cs" />
     <Compile Include="Vlc.Installer.cs" />
     <Compile Include="Vlc.VlcClient.cs" />

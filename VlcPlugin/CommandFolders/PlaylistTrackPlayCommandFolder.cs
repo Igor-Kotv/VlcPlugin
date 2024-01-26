@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc.CommandFolders
+﻿namespace Loupedeck.VlcPlugin.CommandFolders
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
 
     internal class PlaylistTrackPlayCommandFolder : PluginDynamicFolder
     {
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public PlaylistTrackPlayCommandFolder()
         {
@@ -21,7 +21,7 @@
             deviceType == DeviceType.Loupedeck60 ?
             PluginDynamicFolderNavigation.ButtonArea : PluginDynamicFolderNavigation.EncoderArea;
 
-        public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png");
+        public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png");
 
         public override IEnumerable<String> GetButtonPressActionNames(DeviceType _)
         {
@@ -39,7 +39,7 @@
 
         public override BitmapImage GetCommandImage(String commandParameter, PluginImageSize imageSize)
         {
-            var trackImage = EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayPause.png");
+            var trackImage = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.PlayPause.png");
 
             using (var bitmapBuilder = new BitmapBuilder(imageSize))
             {

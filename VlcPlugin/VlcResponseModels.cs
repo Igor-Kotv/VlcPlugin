@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
     using System.Collections.Generic;

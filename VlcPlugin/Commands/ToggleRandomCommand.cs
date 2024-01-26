@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
 
     using System;
@@ -6,7 +6,7 @@
     class ToggleRandomCommand : PluginDynamicCommand
     {
         private Boolean _random;
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public ToggleRandomCommand() : base("Toggle Random", "Toggles random playing of tracks in playlist", "Playback")
         {
@@ -26,8 +26,8 @@
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => this._random
-            ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.RandomOn.png")
-            : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.RandomOff.png");
+            ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.RandomOn.png")
+            : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.RandomOff.png");
     }
 
 }

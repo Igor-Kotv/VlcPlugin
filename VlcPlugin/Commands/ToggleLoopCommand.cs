@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
 
     using System;
@@ -7,7 +7,7 @@
     {
         private Boolean _loopState;
         private Boolean _repeatState;
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public ToggleLoopCommand() : base("Toggle Loop", "Toggles repeat playlist or one track", "Playback")
         {
@@ -29,10 +29,10 @@
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
             return this._loopState
-                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.LoopOn.png")
+                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.LoopOn.png")
                 : this._repeatState
-                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.RepeatOne.png")
-                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.Loop.png");
+                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.RepeatOne.png")
+                : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.Loop.png");
         }
 
 

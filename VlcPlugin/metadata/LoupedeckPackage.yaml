@@ -13,12 +13,10 @@ pluginCapabilities:
     - HasNoApplication
     - NoUserInputEmulation
 
-pluginFileName: Vlc.dll
+pluginFileName: VlcPlugin.dll
 
-pluginFolderWin: ./
-pluginFolderMac: ./
-
-icon256x256: metadata/Icon256x256.png
+pluginFolderWin: .
+pluginFolderMac: .
 
 license: MIT
 licenseUrl: https://opensource.org/licenses/MIT

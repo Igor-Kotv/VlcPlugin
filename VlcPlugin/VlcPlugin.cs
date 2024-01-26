@@ -1,12 +1,12 @@
-namespace Loupedeck.Vlc
+namespace Loupedeck.VlcPlugin
 {
     using System;
 
-    public partial class Vlc : Plugin
+    public partial class VlcPlugin : Plugin
     {
         private readonly PluginPreferenceAccount _vlcAccount;
 
-        public Vlc()
+        public VlcPlugin()
         {
             this._vlcAccount = new PluginPreferenceAccount("vlc-account")
             {
@@ -76,10 +76,10 @@ namespace Loupedeck.Vlc
 
         public void SetPluginIcons()
         {
-            this.Info.Icon16x16 = EmbeddedResources.ReadImage("Loupedeck.Vlc.metadata.Icon16x16.png");
-            this.Info.Icon32x32 = EmbeddedResources.ReadImage("Loupedeck.Vlc.metadata.Icon32x32.png");
-            this.Info.Icon48x48 = EmbeddedResources.ReadImage("Loupedeck.Vlc.metadata.Icon48x48.png");
-            this.Info.Icon256x256 = EmbeddedResources.ReadImage("Loupedeck.Vlc.metadata.Icon256x256.png");
+            this.Info.Icon16x16 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon16x16.png");
+            this.Info.Icon32x32 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon32x32.png");
+            this.Info.Icon48x48 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon48x48.png");
+            this.Info.Icon256x256 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon256x256.png");
         }
 
         public override void RunCommand(String commandName, String parameter)

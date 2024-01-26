@@ -1,9 +1,9 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
     using System.IO;
 
-    public partial class Vlc : Plugin
+    public partial class VlcPlugin : Plugin
     {
         public override Boolean Install()
         {
@@ -16,7 +16,7 @@
 
             var filePath = Path.Combine(pluginDataDirectory, "AuthorizationPage.html");
 
-            this.Assembly.ExtractFile("Loupedeck.Vlc.Resources.AuthorizationPage.html", filePath);
+            this.Assembly.ExtractFile("Loupedeck.VlcPlugin.Resources.AuthorizationPage.html", filePath);
 
             return true;
         }
@@ -25,7 +25,7 @@
         {
             var pluginDataDirectory = this.GetPluginDataDirectory();
             var filePath = Path.Combine(pluginDataDirectory, "AuthorizationPage.html");
-            this.Assembly.ExtractFile("Loupedeck.Vlc.Resources.AuthorizationPage.html", filePath);
+            this.Assembly.ExtractFile("Loupedeck.VlcPlugin.Resources.AuthorizationPage.html", filePath);
         }
     }
 }

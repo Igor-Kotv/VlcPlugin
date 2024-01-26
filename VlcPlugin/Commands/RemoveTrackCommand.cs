@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
 
     using System;
@@ -6,7 +6,7 @@
 
     class RemoveTrackCommand : PluginDynamicCommand
     {
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public RemoveTrackCommand() : base("Remove Track", "Removes track from playlist", "Playback")
         {

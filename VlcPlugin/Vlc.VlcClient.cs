@@ -1,4 +1,4 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@
 
     using Newtonsoft.Json.Linq;
 
-    public partial class Vlc : Plugin
+    public partial class VlcPlugin : Plugin
     {
         private static readonly HttpClient client = new HttpClient();
         private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";

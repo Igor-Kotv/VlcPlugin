@@ -1,11 +1,11 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
 
     using System;
 
     class PlayInputActionEditorCommand : ActionEditorCommand
     {
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         private const String UrlControlName = "Url";
 
@@ -48,6 +48,6 @@
             return true;
         }
 
-        protected override BitmapImage GetCommandImage(ActionEditorActionParameters actionParameters, Int32 imageWidth, Int32 imageHeight) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.PlayMedia.png");
+        protected override BitmapImage GetCommandImage(ActionEditorActionParameters actionParameters, Int32 imageWidth, Int32 imageHeight) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.PlayMedia.png");
     }
 }

@@ -1,14 +1,14 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
 
 
     class JogAdjustment : PluginDynamicAdjustment
     {
-        private Double _initialPosition = Vlc.InitialPosition;
-        private Double _initialLength = Vlc.TrackLength;
+        private Double _initialPosition = VlcPlugin.InitialPosition;
+        private Double _initialLength = VlcPlugin.TrackLength;
 
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public JogAdjustment() : base("Jog", "Scroll through track and play", "Playback navigation", false)
         {
@@ -43,13 +43,13 @@
                 }
             }
             this._vlcPlugin.Seek(this._initialPosition);
-            Vlc.InitialPosition = this._initialPosition;
+            VlcPlugin.InitialPosition = this._initialPosition;
             this.ActionImageChanged(actionParameter);
         }
 
         protected override void RunCommand(String actionParameter) => this._vlcPlugin.Play();
 
-        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.Rewind.png");
+        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.Rewind.png");
 
         protected override String GetAdjustmentValue(String actionParameter)
         {

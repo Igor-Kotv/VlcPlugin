@@ -1,11 +1,11 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
 
 
     class NavigationAdjustment : PluginDynamicAdjustment
     {
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public NavigationAdjustment() : base("Navigate", "Selects track in playlist", "Playback navigation", false)
         {
@@ -23,7 +23,7 @@
             }
         }
 
-        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.NavigateTracks.png");
+        protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.NavigateTracks.png");
     }
 
 }

@@ -1,12 +1,12 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
 
 
     class VolumeAdjustment : PluginDynamicAdjustment
     {
-        private Double _initialVolume = Vlc.InitialVolume;
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private Double _initialVolume = VlcPlugin.InitialVolume;
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
 
         public VolumeAdjustment() : base("Volume", "Volume adjustment", "Level", true)
         {
@@ -14,7 +14,7 @@
 
         protected override void ApplyAdjustment(String actionParameter, Int32 ticks)
         {
-            this._initialVolume = Vlc.InitialVolume;
+            this._initialVolume = VlcPlugin.InitialVolume;
             if (ticks > 0)
             {
                 if (this._initialVolume < 320)
@@ -30,7 +30,7 @@
                 }
             }
             this._vlcPlugin.AdjustVolume((Int32)Math.Round(this._initialVolume));
-            Vlc.InitialVolume = this._initialVolume;
+            VlcPlugin.InitialVolume = this._initialVolume;
             this.ActionImageChanged(actionParameter);
 
         }
@@ -38,7 +38,7 @@
         protected override void RunCommand(String actionParameter)
         {
             this._initialVolume = 0;
-            Vlc.InitialVolume = 0;
+            VlcPlugin.InitialVolume = 0;
             this._vlcPlugin.AdjustVolume((Int32)this._initialVolume);
             this.ActionImageChanged(actionParameter);
         }
@@ -46,10 +46,10 @@
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
             return this._initialVolume < 30
-                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeLow.png")
+                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeLow.png")
                 : this._initialVolume > 30 && this._initialVolume < 150
-                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeMedium.png")
-                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width50.VolumeHigh.png");
+                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeMedium.png")
+                : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width50.VolumeHigh.png");
 
         }
         protected override String GetAdjustmentValue(String actionParameter)

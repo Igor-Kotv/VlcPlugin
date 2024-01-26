@@ -1,10 +1,10 @@
-﻿namespace Loupedeck.Vlc
+﻿namespace Loupedeck.VlcPlugin
 {
     using System;
 
     class TogglePlayCommand : PluginMultistateDynamicCommand
     {
-        private readonly Vlc _vlcPlugin = new Vlc();
+        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
         private String _state = "";
 
         public TogglePlayCommand() : base("Toggle Play", "Play/pause media", "Playback")
@@ -33,8 +33,8 @@
         protected override BitmapImage GetCommandImage(String actionParameter, Int32 stateIndex, PluginImageSize imageSize)
         {
             var trackImage = this.States[stateIndex].Name != "playing" && (this._state.IsNullOrEmpty() || (!this._state.IsNullOrEmpty() && this._state != "playing"))
-                ? EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.TogglePlay.png")
-                : EmbeddedResources.ReadImage("Loupedeck.Vlc.Resources.ActionImages.Width90.Pause.png");
+                ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png")
+                : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.Pause.png");
 
             using (var bitmapBuilder = new BitmapBuilder(imageSize))
             {
