@@ -19,9 +19,6 @@
 
             this.ActionEditor.AddControlEx(
                 new ActionEditorFileSelector(name: FilePathControlName, labelText: "Select file to play:")
-                    .AddFilter("*.mpeg;*.mpeg4;*.mp3;*.wav;*.aac;*.flac;*.wmv;*.mov", "Media Files")
-                    .AddFilter("*.*", "All Files")
-                    .SetInitialDirectory("%UserProfile%")
                 );
 
             this.ActionEditor.AddControlEx(
