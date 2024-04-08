@@ -79,7 +79,7 @@
         {
             var currentUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            return this.SystemIsMac() ? $"{currentUserFolder}/Library/Preferences/org.videolan.vlc/vlcrc" : $@"{currentUserFolder}\Application Data\vlc\vlcrc";
+            return this.SystemIsMac() ? $"{currentUserFolder}/Library/Preferences/org.videolan.vlc/vlcrc" : $@"{currentUserFolder}\AppData\Roaming\vlc\vlcrc";
         }
 
         private Boolean TryFindSetting(String[] lines, String key, out String setting)
