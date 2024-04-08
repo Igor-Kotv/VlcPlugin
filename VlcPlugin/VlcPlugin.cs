@@ -11,19 +11,30 @@ namespace Loupedeck.VlcPlugin
             this._vlcAccount = new PluginPreferenceAccount("vlc-account")
             {
                 DisplayName = "VLC",
-                IsRequired = true,
+                IsRequired = this.LoginRequired(),
                 LoginUrlTitle = "Sign in to VLC",
                 LogoutUrlTitle = "Sign out from VLC"
             };
-
-            this.PluginPreferences.Add(this._vlcAccount);
         }
 
         public override void Load()
         {
+            if (!this.ClientApplication.IsRunning())
+            {
+                this.SetPort();
+
+                this.SetupVlc();
+
+                // In case if autosetup failed
+
+                if (this.LoginRequired())
+                {
+                    this.PluginPreferences.Add(this._vlcAccount);
+                }
+            }
+
             this.ConnectVlc();
             this.SetPluginIcons();
-            this.CopyPluginData();
 
             this.ClientApplication.ApplicationStarted += this.OnApplicationStarted;
             this.ClientApplication.ApplicationStopped += this.OnApplicationStopped;
@@ -31,7 +42,6 @@ namespace Loupedeck.VlcPlugin
             this._vlcAccount.LogoutRequested += this.OnVlcAccountOnLogoutRequested;
 
             this.ServiceEvents.UrlCallbackReceived += this.OnUrlCallbackReceived;
-
         }
 
         public override void Unload()
@@ -45,20 +55,27 @@ namespace Loupedeck.VlcPlugin
 
         private void OnApplicationStarted(Object sender, EventArgs e) => this.ConnectVlc();
 
-        private void OnApplicationStopped(Object sender, EventArgs e) => this.ConnectVlc();
+        private void OnApplicationStopped(Object sender, EventArgs e) => this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not running");
 
         private void OnUrlCallbackReceived(Object sender, UrlCallbackReceivedEventArgs e)
         {
-            if ((e.Uri != null) && e.Uri.LocalPath.Contains("setPassword") && !String.IsNullOrEmpty(e.Uri.Query))
+            if (this.ClientApplication.IsRunning() && this.LoginRequired())
             {
-                this.SetPluginSetting("password", e.Uri.Query.Substring(1), false);
-                this.ConnectVlc();
+                if ((e.Uri != null) && e.Uri.LocalPath.Contains("setPassword") && !String.IsNullOrEmpty(e.Uri.Query))
+                {
+                    this.SetPluginSetting("password", e.Uri.Query.Substring(1), false);
+                    this.ConnectVlc();
+                }
+                else
+                {
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a correct password");
+                }
             }
         }
 
         private void OnVlcAccountOnLoginRequested(Object sender, EventArgs e)
         {
-            if (ResposeMessage == null)
+            if (!this.ClientApplication.IsRunning())
             {
                 this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "Please start VLC media player application before signing in");
                 return;

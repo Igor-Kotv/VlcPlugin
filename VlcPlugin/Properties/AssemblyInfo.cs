@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("VLC media player")]
-[assembly: AssemblyDescription("Plugin for remote control of VLC media player using Loupedeck consoles.")]
+[assembly: AssemblyDescription("Plugin for remote control of VLC media player.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ihor Kotvytskyi")]
 [assembly: AssemblyProduct("VLC plugin")]
@@ -21,4 +21,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("1ED29E48-0DF0-425A-9648-4DD393EBB248")]
 
-[assembly: AssemblyVersion("1.2.0")]
+[assembly: AssemblyVersion("1.3.0")]

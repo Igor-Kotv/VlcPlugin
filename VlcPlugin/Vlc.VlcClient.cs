@@ -9,18 +9,19 @@
     using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
-
     using Newtonsoft.Json.Linq;
 
     public partial class VlcPlugin : Plugin
     {
-        private static readonly HttpClient client = new HttpClient();
-        private static readonly String _baseUrl = @"http://127.0.0.1:8080/requests/status.json";
-        private static readonly String _playlistUrl = @"http://127.0.0.1:8080/requests/playlist.json";
         private String _redirectUrl;
         private HttpListener _listener;
 
+        private static HttpClient Client { get; set; } = new HttpClient();
         public static HttpResponseMessage ResposeMessage { get; private set; }
+
+        private static String BaseUrl { get; set; } = "";
+        private static String PlaylistUrl { get; set; } = "";
+
         public static String ResposeData { get; set; }
 
         public static String Password { get; set; } = "";
@@ -39,13 +40,7 @@
                     return;
                 }
 
-                var randomNumbers = new Random();
-                var ports = Enumerable
-                    .Repeat(0, 100)
-                    .Select(i => randomNumbers.Next(1000, 9000))
-                    .ToArray();
-
-                if (!NetworkHelpers.TryGetFreeTcpPort(ports, out var port))
+                if (!this.TryGetTcpPort(out var port))
                 {
                     return;
                 }
@@ -60,6 +55,123 @@
             catch (Exception e)
             {
                 Tracer.Error($"Server Start error: {e.Message}", e);
+            }
+        }
+
+        public Boolean TryGetTcpPort(out Int32 portNumber)
+        {
+            portNumber = 0;
+
+            var randomNumbers = new Random();
+            var ports = Enumerable
+                .Repeat(0, 100)
+                .Select(i => randomNumbers.Next(8000, 9100))
+                .ToArray();
+
+            if (NetworkHelpers.TryGetFreeTcpPort(ports, out var port))
+            {
+                portNumber = port;
+            }
+            return 0 != port;
+        }
+
+        public String GetSettingsPath()
+        {
+            var currentUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            return this.SystemIsMac() ? $"{currentUserFolder}/Library/Preferences/org.videolan.vlc/vlcrc" : $@"{currentUserFolder}\Application Data\vlc\vlcrc";
+        }
+
+        private Boolean TryFindSetting(String[] lines, String key, out String setting)
+        {
+            setting = lines.FirstOrDefault((line) =>
+            {
+                var keyPart = line.Split("=")[0];
+                return keyPart.EqualsNoCase(key) || $"#{keyPart}".EqualsNoCase(key);
+            });
+
+            return !setting.IsNullOrEmpty();
+        }
+
+        public Boolean TryGetSettingValue(String key, out String value)
+        {
+            value = null;
+            try
+            {
+                var filePath = this.GetSettingsPath();
+
+                if (File.Exists(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+
+                    if (this.TryFindSetting(lines, key, out var line))
+                    {
+                        value = line.Split("=")?[1];
+                    }
+                }
+                else
+                {
+                    Tracer.Trace("The file does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracer.Trace("An error occurred: " + ex.Message);
+            }
+            return null != value;
+        }
+
+        public void SetSettingValue(String key, String value)
+        {
+            try
+            {
+                var filePath = this.GetSettingsPath();
+
+                if (File.Exists(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+
+                    if (this.TryFindSetting(lines, key, out var line))
+                    {
+                        var i = Array.IndexOf(lines, line);
+                        var keyPart = line.Split("=")?[0];
+                        lines[i] = $"{(keyPart.StartsWithNoCase("#") ? keyPart.Substring(1) : keyPart)}={value}";
+                        File.WriteAllLines(filePath, lines);
+                    }
+                }
+                else
+                {
+                    Tracer.Trace("The file does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracer.Trace("An error occurred: " + ex.Message);
+            }
+        }
+
+        public void SetPassword() => this.SetSettingValue("#http-password", "vlc-plugin-password");
+
+        public void SetInterfaceSetting()
+        {
+            if(this.TryGetSettingValue("extraintf", out var value))
+            {
+                if (value != "http")
+                {
+                    this.SetSettingValue("extraintf", "http");
+                    return;
+                }
+            }
+            this.SetSettingValue("#extraintf", "http");
+        }
+
+        public void SetPort()
+        {
+            var ports = new [] { 8080, 9090 };
+
+            if (NetworkHelpers.TryGetFreeTcpPort(ports, out var port))
+            {
+                this.SetSettingValue("#http-port", port.ToString());
             }
         }
 
@@ -197,7 +309,7 @@
 
         public Information GetTrackInfo()
         {
-            var responseDataJo = GetDataFromResponse(GetResponseString(_baseUrl).Result);
+            var responseDataJo = GetDataFromResponse(GetResponseString(BaseUrl).Result);
             if (null == responseDataJo)
             {
                 return null;
@@ -237,7 +349,7 @@
 
         public HashSet<PlaylistItem> GetPlaylistInfo()
         {
-            var playlistResposeData = GetResponseString(_playlistUrl).Result;
+            var playlistResposeData = GetResponseString(PlaylistUrl).Result;
             if (null == GetDataFromResponse(playlistResposeData))
             {
                 return null;
@@ -264,44 +376,93 @@
             return playlist;
         }
 
+        private Boolean TryGetPort(out Int32? port)
+        {
+            port = null;
+
+            if (!this.ClientApplication.IsRunning())
+            {
+                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, $"VLC media player application is not running");
+                return false;
+            }
+
+            if (this.TryGetSettingValue("#http-port", out var portString) && Int32.TryParse(portString, out var portNumber))
+            {
+                port = portNumber;
+            }
+
+            return null != port;
+        }
+
         public void ConnectVlc()
         {
+            if (this.TryGetPort(out var port))
+            {
+                BaseUrl = $"http://127.0.0.1:{port}/requests/status.json";
+                PlaylistUrl = $"http://127.0.0.1:{port}/requests/playlist.json";
+            }
+
+            if (BaseUrl.IsNullOrEmpty() && PlaylistUrl.IsNullOrEmpty())
+            {
+                return;
+            }
+
             if (this.TryGetPluginSetting("password", out var value))
             {
                 Password = value;
-                Authorize();
             }
 
-            ResposeMessage = this.GetResponse(_baseUrl).Result;
+            this.Authorize();
+
+            ResposeMessage = this.GetResponse(BaseUrl)?.Result;
 
             if (null != ResposeMessage)
             {
-                ResposeData = GetResponseString(_baseUrl).Result;
+                var loginRequired = this.LoginRequired();
+                ResposeData = GetResponseString(BaseUrl).Result;
                 if (ResposeMessage.StatusCode == HttpStatusCode.OK)
                 {
                     var data = GetDataFromResponse(ResposeData);
                     InitialVolume = null != data ? data["volume"].ToString().ParseDouble() : 256;
                     this.OnPluginStatusChanged(Loupedeck.PluginStatus.Normal, "Connected", null, null);
-                    this._vlcAccount.ReportLogin("", Password, "");
+                    if (loginRequired)
+                    { this._vlcAccount.ReportLogin("", Password, ""); }
                 }
                 if (ResposeMessage.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, "Cannot connect to VLC application, please set a password");
-                    this._vlcAccount.ReportLogout();
+                    this.OnPluginStatusChanged(Loupedeck.PluginStatus.Warning, $"Cannot connect to VLC application, please set a password");
+                    if (loginRequired)
+                    { this._vlcAccount.ReportLogout(); }
                 }
             }
-            else
-            {
-                this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, "VLC media player application is not running");
-            }
+
             InitialPosition = 0;
             TrackLength = 0;
         }
 
-        public static void Authorize()
+        public Boolean TryGetPasswordFromVlcSettings(out String password)
         {
-            var byteArray = Encoding.ASCII.GetBytes($":{Password}");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            password = null;
+
+            if (this.TryGetSettingValue("http-password", out var value))
+            {
+                password = value;
+            }
+
+            return null != password;
+        }
+
+        public Boolean LoginRequired() => !this.TryGetPasswordFromVlcSettings(out var _);
+
+        public void Authorize()
+        {
+            var byteArray = this.TryGetPasswordFromVlcSettings(out var password)
+                ? Encoding.ASCII.GetBytes($":{password}")
+                : Encoding.ASCII.GetBytes($":{Password}");
+            if (null != byteArray)
+            {
+                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            }
         }
 
         private void RunTask(Task<String> task)
@@ -331,7 +492,7 @@
 
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{_baseUrl}?command={commandName}");
+                HttpResponseMessage response = await Client.GetAsync($"{BaseUrl}?command={commandName}");
 
                 var responseBody = await response.Content.ReadAsStringAsync();
                 response.EnsureSuccessStatusCode();
@@ -349,7 +510,7 @@
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{url}");
+                HttpResponseMessage response = await Client.GetAsync($"{url}");
                 return response;
             }
             catch (HttpRequestException e)
@@ -365,7 +526,7 @@
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync($"{url}");
+                HttpResponseMessage response = await Client.GetAsync($"{url}");
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 return responseString;
@@ -396,6 +557,16 @@
            ResposeMessage.IsSuccessStatusCode ?
            JObject.Parse(playlistData) :
            null;
+
+        public void SetupVlc()
+        {
+            if (this.LoginRequired())
+            {
+                this.SetPassword();
+            }
+
+            this.SetInterfaceSetting();
+        }
 
         public Boolean SystemIsMac() => Environment.OSVersion.Platform == PlatformID.Unix;
     }

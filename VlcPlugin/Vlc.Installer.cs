@@ -18,14 +18,9 @@
 
             this.Assembly.ExtractFile("Loupedeck.VlcPlugin.Resources.AuthorizationPage.html", filePath);
 
-            return true;
-        }
+            this.SetupVlc();
 
-        public void CopyPluginData()
-        {
-            var pluginDataDirectory = this.GetPluginDataDirectory();
-            var filePath = Path.Combine(pluginDataDirectory, "AuthorizationPage.html");
-            this.Assembly.ExtractFile("Loupedeck.VlcPlugin.Resources.AuthorizationPage.html", filePath);
+            return true;
         }
     }
 }

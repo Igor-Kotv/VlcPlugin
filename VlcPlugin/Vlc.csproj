@@ -168,8 +168,9 @@
   <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <PropertyGroup>
       <PluginToolPath Condition="$(OS) == 'Windows_NT'">C:\Program Files (x86)\Loupedeck\Loupedeck2\LoupedeckPluginTool.exe</PluginToolPath>
-      <PluginToolPath Condition="$(OS) != 'Windows_NT'">~/.local/share/Loupedeck/Plugins/$(MSBuildProjectName)/</PluginToolPath>
-      <OutputDirectoryPath>$([MSBuild]::NormalizePath('$(TargetDir)', '..', 'LibraryPackagesToInstall', '$(ProjectName).lplug4'))</OutputDirectoryPath>
+       <!--Path to LoupedeckPluginTool to modify-->
+      <PluginToolPath Condition="$(OS) != 'Windows_NT'">/Users/ihorkotvytskyi/loupedeck/PluginTool/LoupedeckPluginTool</PluginToolPath>
+      <OutputDirectoryPath>$([MSBuild]::NormalizePath('$(TargetDir)', '..', 'LibraryPackagesToInstall', 'VlcPlugin.lplug4'))</OutputDirectoryPath>
     </PropertyGroup>
     <Message Text="Plugin tool path is $(PluginToolPath)" />
     <Message Text="Output directory path is $(OutputDirectoryPath)" />
