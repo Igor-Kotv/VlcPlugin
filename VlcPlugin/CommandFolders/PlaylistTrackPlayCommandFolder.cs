@@ -17,9 +17,9 @@
         }
 
         public override PluginDynamicFolderNavigation GetNavigationArea(DeviceType deviceType) =>
-            deviceType == DeviceType.Loupedeck50 ||
-            deviceType == DeviceType.Loupedeck60 ?
-            PluginDynamicFolderNavigation.ButtonArea : PluginDynamicFolderNavigation.EncoderArea;
+            deviceType == DeviceType.Loupedeck20 ||
+            deviceType == DeviceType.Loupedeck30 ?
+            PluginDynamicFolderNavigation.EncoderArea : PluginDynamicFolderNavigation.ButtonArea;
 
         public override BitmapImage GetButtonImage(PluginImageSize imageSize) => EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png");
 
