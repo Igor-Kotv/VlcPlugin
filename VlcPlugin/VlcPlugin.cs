@@ -24,13 +24,6 @@ namespace Loupedeck.VlcPlugin
                 this.SetPort();
 
                 this.SetupVlc();
-
-                // In case if autosetup failed
-
-                if (this.LoginRequired())
-                {
-                    this.PluginPreferences.Add(this._vlcAccount);
-                }
             }
 
             this.ConnectVlc();
