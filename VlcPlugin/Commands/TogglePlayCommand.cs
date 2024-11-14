@@ -36,14 +36,20 @@
                 ? EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.TogglePlay.png")
                 : EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.Resources.ActionImages.Width90.Pause.png");
 
-            using (var bitmapBuilder = new BitmapBuilder(imageSize))
+            if (this._vlcPlugin.TryGetCoverArt(imageSize, out var coverArt))
             {
-                if (this._vlcPlugin.TryGetCoverArt(imageSize, out var coverArt))
+                using (var bitmapBuilder = new BitmapBuilder(imageSize))
                 {
+
                     bitmapBuilder.DrawImage(coverArt);
+                    bitmapBuilder.DrawImage(trackImage);
+
+                    return bitmapBuilder.ToImage();
                 }
-                bitmapBuilder.DrawImage(trackImage);
-                return bitmapBuilder.ToImage();
+            }
+            else
+            {
+                return trackImage;
             }
         }
     }

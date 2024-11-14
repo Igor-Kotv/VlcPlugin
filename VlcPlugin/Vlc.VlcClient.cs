@@ -154,15 +154,18 @@
 
         public void SetInterfaceSetting()
         {
-            if(this.TryGetSettingValue("extraintf", out var value))
+            var settingKey = "extraintf";
+            var settingValue = "http";
+
+            if (this.TryGetSettingValue(settingKey, out var value))
             {
-                if (value != "http")
+                if (value != settingValue)
                 {
-                    this.SetSettingValue("extraintf", "http");
+                    this.SetSettingValue(settingKey, settingValue);
                     return;
                 }
             }
-            this.SetSettingValue("#extraintf", "http");
+            this.SetSettingValue(settingKey, settingValue);
         }
 
         public void SetPort()
@@ -309,7 +312,13 @@
 
         public Information GetTrackInfo()
         {
+            if (BaseUrl.IsNullOrEmpty())
+            {
+                return null;
+            }
+
             var responseDataJo = GetDataFromResponse(GetResponseString(BaseUrl).Result);
+
             if (null == responseDataJo)
             {
                 return null;
