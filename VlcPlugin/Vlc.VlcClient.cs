@@ -165,7 +165,7 @@
                     return;
                 }
             }
-            this.SetSettingValue(settingKey, settingValue);
+            this.SetSettingValue($"#{settingKey}", settingValue);
         }
 
         public void SetPort()
