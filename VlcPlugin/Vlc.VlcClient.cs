@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -25,6 +26,8 @@
         public static String ResposeData { get; set; }
 
         public static String Password { get; set; } = "";
+
+        public static ClientApplication App { get; set; } = null;
 
         public static Double InitialVolume { get; set; } = 256;
         public static Double InitialPosition { get; set; } = 0;
@@ -135,7 +138,7 @@
                     {
                         var i = Array.IndexOf(lines, line);
                         var keyPart = line.Split("=")?[0];
-                        lines[i] = $"{(keyPart.StartsWithNoCase("#") ? keyPart.Substring(1) : keyPart)}={value}";
+                        lines[i] = $"{(keyPart.StartsWithNoCase("#") ? keyPart?.Substring(1) : keyPart)}={value}";
                         File.WriteAllLines(filePath, lines);
                     }
                 }
@@ -208,11 +211,11 @@
             {
                 if (Helpers.IsWindows())
                 {
-                    System.Diagnostics.Process.Start(this._redirectUrl);
+                    Process.Start(this._redirectUrl);
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start("open", this._redirectUrl);
+                    Process.Start("open", this._redirectUrl);
                 }
             }
             catch (Exception e)
@@ -342,7 +345,7 @@
                 var artWorkString = responseJo["artwork_url"]?.ToString();
                 if (!artWorkString.IsNullOrEmpty())
                 {
-                    artWorkString = this.SystemIsMac() ? artWorkString.Replace(@"file:///", "/") : artWorkString.Replace(@"file:///", "");
+                    artWorkString = this.SystemIsMac() ? artWorkString?.Replace(@"file:///", "/") : artWorkString?.Replace(@"file:///", "");
                     trackInfo.Category.Meta.ArtworkUrl = Uri.UnescapeDataString(artWorkString);
                 }
             }
@@ -376,8 +379,8 @@
             foreach (var item in playlistJo)
             {
                 var playlistItem = new PlaylistItem();
-                playlistItem.Id = item["id"].ToString();
-                playlistItem.Name = item["name"].ToString();
+                playlistItem.Id = item["id"]?.ToString();
+                playlistItem.Name = item["name"]?.ToString();
                 playlistItem.Current = item["current"]?.ToString();
                 playlist.Add(playlistItem);
             }
@@ -389,7 +392,9 @@
         {
             port = null;
 
-            if (!this.ClientApplication.IsRunning())
+            App = this.ClientApplication;
+
+            if (!App.IsRunning())
             {
                 this.OnPluginStatusChanged(Loupedeck.PluginStatus.Error, $"VLC media player application is not running");
                 return false;
@@ -474,6 +479,50 @@
             }
         }
 
+        public static void WaitForAppToStart(Int32 timeoutMs = 8000)
+        {
+            var sw = Stopwatch.StartNew();
+
+            while (true)
+            {
+                if (App.IsRunning())
+                {
+                    return; // App started successfully
+                }
+
+                if (sw.ElapsedMilliseconds > timeoutMs)
+                {
+                    throw new TimeoutException("Application did not start in time.");
+                }
+
+                Thread.Sleep(200); // small delay to reduce CPU usage
+            }
+        }
+
+        // this.ClientApplication.Start() is not working yet in LPS - use this custom method
+        private static void StartVlc()
+        {
+            if (!App.IsRunning())
+            {
+                try
+                {
+                    if (!Helpers.IsWindows())
+                    {
+                        Helpers.StartProcess("open", "-b org.videolan.vlc");
+                    }
+                    else
+                    {
+                        Process.Start("vlc.exe");
+                    }
+                    WaitForAppToStart();
+                }
+                catch (Exception e)
+                {
+                    Tracer.Error($"Error opening VLC: {e.Message}", e);
+                }
+            }
+        }
+
         private void RunTask(Task<String> task)
         {
             task.ContinueWith(t => t);
@@ -498,7 +547,7 @@
 
         private static async Task<String> Action(String commandName)
         {
-
+            StartVlc();
             try
             {
                 HttpResponseMessage response = await Client.GetAsync($"{BaseUrl}?command={commandName}");
