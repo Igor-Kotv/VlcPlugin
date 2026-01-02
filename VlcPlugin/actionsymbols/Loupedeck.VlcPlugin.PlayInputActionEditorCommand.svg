@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Outer file shape + play triangle cutout -->
+  <path fill="#222" fill-rule="evenodd" d="
+    M6 5 H21 L27 11 V27 H6 Z
+    M13 12 L20 16 L13 20 Z
+  "/>
+</svg>

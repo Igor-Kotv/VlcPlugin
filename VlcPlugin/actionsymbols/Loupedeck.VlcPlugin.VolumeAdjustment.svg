@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Speaker outline (made with a hole using evenodd) -->
+  <path fill="#222" fill-rule="evenodd" d="
+    M7 11
+    L13 11
+    L18 7
+    L18 25
+    L13 21
+    L7 21
+    Z
+
+    M9 13
+    L12.3 13
+    L16 10.2
+    L16 21.8
+    L12.3 19
+    L9 19
+    Z
+  "/>
+
+  <!-- Small wave (ring segment, fill-only) -->
+  <path fill="#222" fill-rule="evenodd" d="
+    M22 12
+    A4 4 0 0 1 22 20
+    L22 18.8
+    A2.8 2.8 0 0 0 22 13.2
+    Z
+  "/>
+
+  <!-- Large wave (ring segment, fill-only) -->
+  <path fill="#222" fill-rule="evenodd" d="
+    M25 9
+    A7 7 0 0 1 25 23
+    L25 21.4
+    A5.2 5.2 0 0 0 25 10.6
+    Z
+  "/>
+</svg>
