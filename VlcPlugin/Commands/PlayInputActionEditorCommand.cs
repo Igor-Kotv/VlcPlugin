@@ -5,11 +5,9 @@
 
     class PlayInputActionEditorCommand : ActionEditorCommand
     {
-        private readonly VlcPlugin _vlcPlugin = new VlcPlugin();
+        private readonly VlcPlugin _vlcPlugin = new ();
 
-        private const String UrlControlName = "Url";
-
-        private const String FilePathControlName = "FilePath";
+        private const String FilePathOrUrlControlName = "FilePath";
 
         public PlayInputActionEditorCommand()
         {
@@ -18,31 +16,22 @@
             this.Description = "Starts playing specified media file or folder with media files";
 
             this.ActionEditor.AddControlEx(
-                new ActionEditorFileSelector(name: FilePathControlName, labelText: "Select file to play:")
+                new ActionEditorFileSelector(name: FilePathOrUrlControlName, labelText: "File or URL to a media file:")
                 );
-
-            this.ActionEditor.AddControlEx(
-                new ActionEditorTextbox(name: UrlControlName, labelText: "Enter URL to a media file:"));
         }
 
         protected override Boolean RunCommand(ActionEditorActionParameters actionParameters)
         {
-            var url = actionParameters.GetString(UrlControlName);
-            var filePath = actionParameters.GetString(FilePathControlName);
+            var value = actionParameters.GetString(FilePathOrUrlControlName);
 
-            if (url.IsNullOrEmpty() && filePath.IsNullOrEmpty())
+            if (value.IsNullOrEmpty())
             {
                 return false;
             }
 
-            if (!filePath.IsNullOrEmpty())
+            if (!value.IsNullOrEmpty())
             {
-                this._vlcPlugin.InputPlay(filePath);
-            }
-
-            if (!url.IsNullOrEmpty())
-            {
-                this._vlcPlugin.InputPlay(url);
+                this._vlcPlugin.InputPlay(value);
             }
 
             return true;
