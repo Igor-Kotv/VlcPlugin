@@ -22,7 +22,6 @@ namespace Loupedeck.VlcPlugin
             if (!this.ClientApplication.IsRunning())
             {
                 this.SetPort();
-
                 this.SetupVlc();
             }
 
@@ -84,13 +83,7 @@ namespace Loupedeck.VlcPlugin
             this._vlcAccount.ReportLogout();
         }
 
-        public void SetPluginIcons()
-        {
-            this.Info.Icon16x16 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon16x16.png");
-            this.Info.Icon32x32 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon32x32.png");
-            this.Info.Icon48x48 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon48x48.png");
-            this.Info.Icon256x256 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon256x256.png");
-        }
+        public void SetPluginIcons() => this.Info.Icon256x256 = EmbeddedResources.ReadImage("Loupedeck.VlcPlugin.metadata.Icon256x256.png");
 
         public override void RunCommand(String commandName, String parameter)
         {
